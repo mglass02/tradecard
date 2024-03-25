@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cards</title>
+    <title>Collections</title>
     <link rel="stylesheet" href="styles/ui.css">
 </head>
 
@@ -16,15 +16,27 @@
                 <li><a href="/about" class="header__link">About</a></li>
                 <li><a href="/contact" class="header__link">Contact</a></li>
                 <li><a href="/cards" class="header__link">Cards</a></li>
-                <li class="nav-border" id="memberNav"></li>
+                <li class="nav-border" id="memberNav">
+                </li>
             </ul>
         </nav>
     </header>
     
-    <main class="main card-page">
-        <section class="cards">
-            <h2>CARD INFO</h2>
-        </section>
+    <main class="main collections">
+        <h2 class="collections__title">Your Collections</h2>
+        <div class="collections-list">
+            <div class="collection">
+                <h3 class="collection__title">Collection Name</h3>
+                <div class="collection__info">
+                    <span>Total Cards: 50</span>
+                    <span class="collection__likes">Likes: 20</span>
+                    <span class="collection__comments">Comments: 10</span>
+                </div>
+                <div class="collection__actions">
+                    <a href="#">View Collection</a>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer>
@@ -32,7 +44,8 @@
         <a href="mailto:tradecardproject@gmail.com" class="footer__email">Email us</a>
     </footer>
 
-    <script src="scripts/cards.js"></script>
+    <script src="scripts/collection.js"></script>
     <script src="scripts/main.js"></script>
 </body>
+</html>
 </html>

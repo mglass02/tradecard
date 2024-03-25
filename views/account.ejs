@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account</title>
+    <link rel="stylesheet" href="styles/ui.css">
+</head>
+
+<body>
+    <header class="header">
+        <h1 class="header__title">Tradecard</h1>
+        <nav class="header__nav">
+            <ul class="header__menu">
+                <li><a href="/home" class="header__link">Home</a></li>
+                <li><a href="/about" class="header__link">About</a></li>
+                <li><a href="/contact" class="header__link">Contact</a></li>
+                <li><a href="/cards" class="header__link">Cards</a></li>
+                <li class="nav-border" id="memberNav"> 
+                </li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main class="main">
+        <section class="account">
+            <h2 class="account__title">Account Details</h2>
+            <div class="account-details">
+                <p><strong>Email:</strong> user@example.com</p>
+                <p><strong>Username:</strong> user123</p>
+            </div>
+            <h2 class="account__title">Account Options</h2>
+            <div class="account-options">
+                <a href="#" class="button change-password">Change Password</a>
+                <a href="#" class="button log-out">Log Out</a>
+                <a href="#" class="button delete-account">Delete account</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p class="footer__text">&copy; 2024 Tradecard. All rights reserved.</p>
+        <a href="mailto:tradecardproject@gmail.com" class="footer__email">Email us</a>
+    </footer>
+
+    <script src="scripts/account.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+</html>
