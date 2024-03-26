@@ -1,0 +1,574 @@
+/* Global Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff; 
+    color: #000;
+}
+
+/* Header Styles */
+.header {
+    background-color: #ffcc00; 
+    color: #000; 
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+}
+
+.header__title {
+    margin: 0;
+    background-color: #000; 
+    color: #ffcc00; 
+    padding: 10px 20px; 
+    display: inline-block; 
+    border-radius: 5px; 
+}
+
+.header__nav {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.header__link {
+    font-weight: bold;
+}
+
+.header__menu {
+    list-style-type: none;
+    padding: 0;
+}
+
+.header__menu li {
+    display: inline;
+    margin-right: 20px;
+}
+
+.header__dropdown {
+    position: relative;
+}
+
+.header__button {
+    background-color: #000; 
+    color: #fff; 
+    padding: 10px 20px;
+    margin-top: 20px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.header__dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    min-width: 120px;
+    z-index: 1;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.header__dropdown-content a {
+    display: block;
+    padding: 10px 20px;
+    color: #000; 
+    text-decoration: none;
+}
+
+.header__dropdown-content a:hover {
+    background-color: #f4f4f4; 
+}
+
+.header__dropdown:hover .header__dropdown-content {
+    display: block;
+}
+
+.header__menu li a {
+    color: #000; 
+    text-decoration: none;
+}
+
+/* Main Content Styles */
+.main {
+    padding: 20px;
+}
+
+.intro {
+    text-align: center;
+}
+
+.intro__title {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #333; 
+}
+
+.intro__description {
+    margin-bottom: 40px;
+    color: #666; 
+}
+
+.collections-home {
+    margin-bottom: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.collections__title-home{
+    text-align: center;
+}
+
+.collection-home {
+    background-color: #fff;
+    border: 1px solid #000; 
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: calc(33.33% - 40px);
+    transition: transform 0.3s ease;
+}
+
+.collection-home:hover {
+    transform: translateY(-5px);
+}
+
+.collection-home h3 {
+    margin-top: 0;
+    color: #333; 
+}
+
+.button {
+    background-color: #ffcc00; 
+    color: #000; 
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    padding: 4px 20px;
+    font-weight: bold;
+    font-size: small;
+    border: solid black 2px;
+}
+
+.button:hover {
+    background-color: #ffd633; 
+}
+
+footer {
+    background-color: #000; 
+    color: #fff; 
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.footer__text {
+    margin: 0;
+}
+
+.footer__email{
+    color: white;
+    text-decoration: none;
+    font-size: small;
+    font-weight: bold;
+}
+
+/* About Page */
+.main.about {
+    padding: 20px;
+}
+
+/* Style for the introduction section */
+.intro_about {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+.intro__title_about {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.intro__description_about {
+    font-size: 16px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.section__subtitle_about {
+    font-size: 20px;
+    color: #333;
+    margin-top: 20px;
+}
+
+.feature-list_about {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.feature-list_about li {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.join-message_about {
+    font-size: 18px;
+    color: #333;
+    font-style: italic;
+    margin-top: 20px;
+    text-align: center;
+}
+
+
+/* Contact Page */
+.main.contact {
+    padding: 20px;
+}
+
+.contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.contact-form__title {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #333; 
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd; 
+    border-radius: 5px;
+}
+
+textarea {
+    resize: vertical; 
+}
+
+/* Cards Page */
+.main.cards {
+    padding: 20px;
+}
+
+.card-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.card {
+    position: relative; 
+    text-align: center; 
+}
+
+.card__image {
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+.card__title {
+    margin-top: 10px;
+    color: #333; 
+}
+
+.card__price {
+    margin-bottom: 10px;
+    color: #666; 
+}
+
+.add-to-wishlist {
+    margin: 0 auto; 
+    display: block; 
+    font-weight: bold; 
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.card__quantity {
+    width: 50px;
+    padding: 5px;
+    border: 1px solid #ddd; 
+    border-radius: 5px;
+    text-align: center;
+}
+
+.card__wishlist {
+    background-color: #ffcc00; 
+    color: #000; 
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.card__wishlist:hover {
+    background-color: #ffd633; 
+}
+
+/* Account Page */
+.account {
+    text-align: center;
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    border: solid black 1px;
+    border-radius: 10px;
+}
+
+.account__title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333; 
+}
+
+.account-details p,
+.account-options button,
+.account-options a {
+    margin-bottom: 10px;
+}
+
+.account-options button,
+.account-options a {
+    display: block;
+    width: 20%;
+}
+
+.button.change-password,
+.button.log-out,
+.button.delete-account {
+    margin: 0 auto; 
+    display: block; 
+    font-weight: bold; 
+    font-size: small;
+    margin-top: 10px;
+    background-color: #ffcc00; 
+    color: #000;
+    padding: 4px 20px;
+    border: solid black 2px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+.button.change-password:hover,
+.button.log-out:hover {
+    background-color: #ffd633; 
+}
+
+/* Wishlist Page */
+.wishlist__title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333; 
+}
+
+.wishlist-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.wishlist-card {
+    background-color: #fff;
+    border: 1px solid #000; 
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: calc(33.33% - 40px);
+    transition: transform 0.3s ease;
+}
+
+.wishlist-card:hover {
+    transform: translateY(-5px);
+}
+
+.wishlist-card h3 {
+    margin-top: 0;
+    color: #333; 
+}
+
+/* Create Account Page */
+.create-account {
+    padding: 20px;
+}
+
+.account-form {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: none;
+    padding: 20px;
+}
+
+.form-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+}
+
+.create-account__button {
+    display: block;
+    width: 100%;
+    background-color: #ffcc00; 
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding: 4px 20px;
+    font-weight: bold;
+    font-size: small;
+    border: solid black 2px;
+}
+
+.create-account__button:hover {
+    background-color: #ffd633; 
+}
+
+/* Login Page */
+.login {
+    padding: 20px;
+}
+
+.login-form {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: none;
+    padding: 20px;
+}
+
+.form-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: none; 
+    border-radius: 5px;
+    background-color: #f3f3f3; 
+}
+
+.login__button {
+    display: block;
+    text-align: center;
+    width: 40%; 
+    background-color: #ffcc00; 
+    color: #000; 
+    margin: 5px auto; 
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding: 4px 20px;
+    font-weight: bold;
+    font-size: small;
+    border: solid black 2px;
+}
+
+.login__button:hover {
+    background-color: #ffd633; 
+}
+
+.header__menu .nav-border {
+    border: 1px solid #000; 
+    border-radius: 5px; 
+    padding: 10px; 
+}
+
+.header__menu .nav-border a {
+    list-style: none;
+}
+
+.header__menu .nav-border a + a {
+    margin-left: 10px;
+}
+
+/* Collection page */
+.collection {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+.collection__title {
+    margin-top: 0;
+}
+.collection__info {
+    margin-bottom: 10px;
+}
+.collection__info span {
+    margin-right: 10px;
+}
+.collection__actions {
+    margin-top: 10px;
+}
+.collection__actions a {
+    margin-right: 10px;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.collection__likes,
+.collection__comments {
+    display: inline-block;
+    margin-right: 10px;
+}
