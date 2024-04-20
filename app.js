@@ -4,12 +4,14 @@ const path = require('path');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 
+// Create Express application
 const app = express();
-const PORT = process.env.PORT || 3000;
 
+// Import database connection configuration
+const connection = require('./db');
 
 // Set view engine to EJS
-app.set('view engine', 'ejs');
+app.set("view engine", "ejs");
 
 // Set views directory
 app.set('views', path.join(__dirname, 'views'));
@@ -89,7 +91,14 @@ app.get('/login', (req, res)=>{
     res.render('login')
 })
 
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+// Set port number
+const port = 3000;
+
+// Start server
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+  connection.connect(function(err){
+    if(err) throw err;
+    console.log(`Database connected`);
+  })
 });
