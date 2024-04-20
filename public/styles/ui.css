@@ -1,574 +1,493 @@
 /* Global Styles */
 body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #fff; 
-    color: #000;
+    font-family:'Courier New', Courier, monospace; /* Set font family for the entire document */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    background-color: #fff;  /* Set background color to white */
+    color: #000; /* Set text color to black */
 }
 
+img{
+    width: 50%; /* Set width of images to 50% of their container */
+}
+
+/* card page */
+.card-container {
+    display: flex; /* Use flexbox for layout */
+    justify-content: center; /* Center the cards horizontally */
+    align-items: center; /* Center the cards vertically */
+    gap: 20px; /* Set gap between cards */
+    padding: 20px; /* Add padding */
+    text-align: center; /* Center-align text */
+}
+
+.card {
+    border: 1px solid #ccc; /* Add border */
+    border-radius: 10px; /* Round corners */
+    width: 400px; /* Increase the width of the card */
+    overflow: hidden; /* Hide overflow content */
+}
+
+.card-header {
+    padding: 10px; /* Add padding */
+    background-color: black; /* Set background color */
+    color: white; /* Set text color */
+    border-bottom: 1px solid #ccc; /* Add bottom border */
+}
+
+.card-name {
+    margin: 0; /* Remove margin */
+}
+
+.card-body {
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack children vertically */
+}
+
+.card-image {
+    height: 50%; /* Adjust the height of the image */
+    background-size: cover; /* Scale background image to cover container */
+    background-position: center; /* Center background image */
+}
+
+.card-details {
+    padding: 20px; /* Add padding */
+    text-align: left; /* Align text to the left */
+}
+
+.card-details p {
+    margin: 10px 0; /* Add margin */
+}
+
+.card-footer {
+    padding: 10px; /* Add padding */
+    background-color: black; /* Set background color */
+    color: white; /* Set text color */
+    border-top: 1px solid #ccc; /* Add top border */
+    text-align: center; /* Center-align text */
+}
+
+.add-to-collection {
+    display: inline-block; /* Display as inline block */
+    padding: 5px 10px; /* Add padding */
+    background-color: #ffcc00; /* Set background color */
+    color: black; /* Set text color */
+    text-decoration: none; /* Remove default underline */
+    border-radius: 5px; /* Round corners */
+    transition: background-color 0.3s; /* Smooth transition on hover */
+}
+
+.add-to-collection:hover {
+    background-color: #e9bf1b; /* Change background color on hover */
+}
+
+/* filter */
+
+.filter{
+    margin: 20px;
+    text-align: center;
+}
+
+.filter a{
+    text-decoration: none;
+    border-right: solid black 2px;
+    border-left: solid black 2px;
+    padding: 5px;
+    margin: auto;
+}
+
+.filter a:hover{
+    padding: 5px;
+    color: #000;
+    font-weight: bolder;
+}
+
+/* about page */
+.about__container {
+    max-width: 800px; /* Set maximum width */
+    margin: 50px auto; /* Center horizontally with auto margins */
+    padding: 20px; /* Add padding */
+    background-color: black; /* Set background color */
+    color: white; /* Set text color */
+    border-radius: 8px; /* Round corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box shadow */
+}
+
+h1 {
+    text-align: center; /* Center-align text */
+    color: #ffcc00; /* Set text color */
+}
+
+p {
+    line-height: 1.6; /* Set line height */
+}
+
+.about__features {
+    margin-top: 30px; /* Add margin */
+}
+
+.about__feature {
+    margin-bottom: 20px; /* Add margin */
+}
+
+.about__feature h2 {
+    color: #ffcc00; /* Set text color */
+}
+
+/* cards page */
+.cards__container {
+    padding: 20px; /* Add padding */
+}
+
+.cards__container h2{
+    text-align: center;
+}
+
+.cards__grid {
+    padding: 40px;
+    display: grid; /* Use grid for layout */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Set grid columns */
+    grid-gap: 20px; /* Set gap between grid items */
+}
+
+.individual__card {
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center-align children horizontally */
+    justify-content: space-between; /* Distribute space evenly between children */
+    border: 1px solid #ccc; /* Add border */
+    padding: 10px; /* Add padding */
+}
+
+.card__name {
+    font-size: 1.2rem; /* Set font size */
+    margin-bottom: 10px; /* Add margin */
+}
+
+.card__desc {
+    font-size: x-small; /* Set font size */
+}
+
+.view__card__button {
+    display: block; /* Display as block */
+    text-align: center; /* Center-align text */
+    width: 40%;  /* Set width */
+    background-color: #ffcc00; /* Set background color */
+    color: #000; /* Set text color */
+    margin: 5px auto; /* Add margin */
+    border-radius: 5px; /* Round corners */
+    cursor: pointer; /* Set cursor to pointer */
+    transition: background-color 0.3s ease; /* Smooth transition */
+    padding: 4px 20px; /* Add padding */
+    font-size: small; /* Set font size */
+    border: solid black 2px; /* Add border */
+    font-family: 'Ariel', sans-serif; /* Set font family */
+    font-weight: bolder; /* Set font weight */
+}
+
+/* home page */
+.home__button{
+    display: inline; /* Display as inline */
+    width: 20%; /* Set width */
+    margin: 10px auto; /* Add margin */
+    background-color: #ffcc00; /* Set background color */
+    color: #000; /* Set text color */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Round corners */
+    cursor: pointer; /* Set cursor to pointer */
+    transition: background-color 0.3s ease; /* Smooth transition */
+    padding: 4px 20px; /* Add padding */
+    font-weight: bold; /* Set font weight */
+    font-size: small; /* Set font size */
+    border: solid black 2px; /* Add border */
+    text-decoration: none; /* Remove default underline */
+}
+
+.home_login_signup {
+    margin: 20px auto; /* Add margin */
+}
 /* Header Styles */
 .header {
-    background-color: #ffcc00; 
-    color: #000; 
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+    background-color: #ffcc00; /* Set background color */
+    color: #000; /* Set text color */
+    padding: 20px; /* Add padding */
+    text-align: center; /* Center-align text */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add box shadow */
+    font-family: 'Courier New', Courier, monospace; /* Set font family */
 }
 
 .header__title {
-    margin: 0;
-    background-color: #000; 
-    color: #ffcc00; 
-    padding: 10px 20px; 
-    display: inline-block; 
-    border-radius: 5px; 
+    margin: 0; /* Remove margin */
+    background-color: #000; /* Set background color */
+    color: #ffcc00; /* Set text color */
+    padding: 10px 20px; /* Add padding */
+    display: inline-block; /* Display as inline block */
+    border-radius: 5px; /* Round corners */
 }
 
 .header__nav {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+    display: flex; /* Use flexbox for layout */
+    justify-content: center; /* Center-align children horizontally */
+    margin-top: 20px; /* Add margin */
 }
 
 .header__link {
-    font-weight: bold;
+    font-weight: bold; /* Set font weight */
 }
 
 .header__menu {
-    list-style-type: none;
-    padding: 0;
+    list-style-type: none; /* Remove default list style */
+    padding: 0; /* Remove default padding */
 }
 
 .header__menu li {
-    display: inline;
-    margin-right: 20px;
+    display: inline; /* Display as inline */
+    margin-right: 20px; /* Add margin */
 }
 
 .header__dropdown {
-    position: relative;
+    position: relative; /* Set position to relative */
 }
 
 .header__button {
-    background-color: #000; 
-    color: #fff; 
-    padding: 10px 20px;
-    margin-top: 20px;
-    border-radius: 20px;
-    cursor: pointer;
+    background-color: #000; /* Set background color */
+    color: #fff; /* Set text color */
+    padding: 10px 20px; /* Add padding */
+    margin-top: 20px; /* Add margin */
+    border-radius: 20px; /* Round corners */
+    cursor: pointer; /* Set cursor to pointer */
 }
 
 .header__dropdown-content {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: #fff;
-    min-width: 120px;
-    z-index: 1;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    display: none; /* Hide by default */
+    position: absolute; /* Set position to absolute */
+    top: 100%; /* Align to bottom of parent */
+    right: 0; /* Align to right of parent */
+    background-color: #fff; /* Set background color */
+    min-width: 120px; /* Set minimum width */
+    z-index: 1; /* Set z-index */
+    border: 1px solid #ddd; /* Add border */
+    border-radius: 5px; /* Round corners */
 }
 
 .header__dropdown-content a {
-    display: block;
-    padding: 10px 20px;
-    color: #000; 
-    text-decoration: none;
+    display: block; /* Display as block */
+    padding: 10px 20px; /* Add padding */
+    color: #000; /* Set text color */
+    text-decoration: none; /* Remove default underline */
 }
 
 .header__dropdown-content a:hover {
-    background-color: #f4f4f4; 
+    background-color: #f4f4f4; /* Change background color on hover */
 }
 
 .header__dropdown:hover .header__dropdown-content {
-    display: block;
+    display: block; /* Display on hover */
 }
 
 .header__menu li a {
-    color: #000; 
-    text-decoration: none;
-}
-
-/* Main Content Styles */
-.main {
-    padding: 20px;
-}
-
-.intro {
-    text-align: center;
-}
-
-.intro__title {
-    font-size: 36px;
-    margin-bottom: 20px;
-    color: #333; 
-}
-
-.intro__description {
-    margin-bottom: 40px;
-    color: #666; 
-}
-
-.collections-home {
-    margin-bottom: 40px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-
-.collections__title-home{
-    text-align: center;
-}
-
-.collection-home {
-    background-color: #fff;
-    border: 1px solid #000; 
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: calc(33.33% - 40px);
-    transition: transform 0.3s ease;
-}
-
-.collection-home:hover {
-    transform: translateY(-5px);
-}
-
-.collection-home h3 {
-    margin-top: 0;
-    color: #333; 
-}
-
-.button {
-    background-color: #ffcc00; 
-    color: #000; 
-    text-decoration: none;
-    display: inline-block;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-    padding: 4px 20px;
-    font-weight: bold;
-    font-size: small;
-    border: solid black 2px;
-}
-
-.button:hover {
-    background-color: #ffd633; 
-}
-
-footer {
-    background-color: #000; 
-    color: #fff; 
-    text-align: center;
-    padding: 20px;
-    margin-top: 40px;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.footer__text {
-    margin: 0;
-}
-
-.footer__email{
-    color: white;
-    text-decoration: none;
-    font-size: small;
-    font-weight: bold;
+    color: #000; /* Set text color */
+    text-decoration: none; /* Remove default underline */
 }
 
 /* About Page */
 .main.about {
-    padding: 20px;
+    padding: 20px; /* Add padding */
 }
 
-/* Style for the introduction section */
-.intro_about {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    margin: 20px auto;
-    max-width: 800px;
+.home_login_signup{
+    text-align: center; /* Center-align text */
+    font-family: Arial, Helvetica, sans-serif; /* Set font family */
+    font-weight: bolder; /* Set font weight */
+}
+/* Create Account Page */
+.create-account {
+    padding: 20px; /* Add padding */
 }
 
-.intro__title_about {
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 15px;
+.account-form {
+    max-width: 500px; /* Set maximum width */
+    margin: 0 auto; /* Center horizontally */
+    background-color: #fff; /* Set background color */
+    border: none; /* Remove border */
+    padding: 20px; /* Add padding */
 }
 
-.intro__description_about {
-    font-size: 16px;
-    color: #666;
-    line-height: 1.6;
-    margin-bottom: 15px;
-}
-
-.section__subtitle_about {
-    font-size: 20px;
-    color: #333;
-    margin-top: 20px;
-}
-
-.feature-list_about {
-    list-style-type: none;
-    padding-left: 20px;
-}
-
-.feature-list_about li {
-    font-size: 16px;
-    color: #666;
-    margin-bottom: 10px;
-}
-
-.join-message_about {
-    font-size: 18px;
-    color: #333;
-    font-style: italic;
-    margin-top: 20px;
-    text-align: center;
-}
-
-
-/* Contact Page */
-.main.contact {
-    padding: 20px;
-}
-
-.contact-form {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.contact-form__title {
-    text-align: center;
-    font-size: 36px;
-    margin-bottom: 20px;
-    color: #333; 
+.form-title {
+    text-align: center; /* Center-align text */
+    margin-bottom: 20px; /* Add margin */
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 20px; /* Add margin */
+}
+
+.form-group label {
+    display: block; /* Display as block */
+    font-weight: bold; /* Set font weight */
+}
+
+.form-group input {
+    width: 100%; /* Set width to fill container */
+    padding: 10px; /* Add padding */
+    border: 1px solid #ccc; /* Add border */
+    border-radius: 5px; /* Round corners */
+}
+
+.error-message {
+    color: red; /* Set text color */
+    font-size: 14px; /* Set font size */
+}
+
+.create-account__button {
+    display: block; /* Display as block */
+    width: 100%; /* Set width */
+    background-color: #ffcc00; /* Set background color */
+    color: #000; /* Set text color */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Round corners */
+    cursor: pointer; /* Set cursor to pointer */
+    transition: background-color 0.3s ease; /* Smooth transition */
+    padding: 4px 0px; /* Add padding */
+    font-weight: bold; /* Set font weight */
+    font-size: small; /* Set font size */
+    border: solid black 2px; /* Add border */
+}
+
+.create-account__button:hover {
+    background-color: #ffd633; /* Change background color on hover */
+}
+
+/* login page */
+.login {
+    padding: 20px; /* Add padding */
+}
+
+.login-form {
+    max-width: 500px; /* Set maximum width */
+    margin: 0 auto; /* Center horizontally */
+    background-color: #fff; /* Set background color */
+    border: none; /* Remove border */
+    padding: 20px; /* Add padding */
+}
+
+.form-title {
+    text-align: center; /* Center-align text */
+    margin-bottom: 20px; /* Add margin */
+}
+
+.form-group {
+    margin-bottom: 20px; /* Add margin */
+}
+
+.form-group label {
+    display: block; /* Display as block */
+    font-weight: bold; /* Set font weight */
+}
+
+.form-group input {
+    width: 100%; /* Set width to fill container */
+    padding: 10px; /* Add padding */
+    border: none;  /* Remove border */
+    border-radius: 5px; /* Round corners */
+    background-color: #f3f3f3; /* Set background color */
+}
+
+.login__button {
+    display: block; /* Display as block */
+    text-align: center; /* Center-align text */
+    width: 40%;  /* Set width */
+    background-color: #ffcc00; /* Set background color */
+    color: #000; /* Set text color */
+    margin: 5px auto; /* Add margin */
+    border-radius: 5px; /* Round corners */
+    cursor: pointer; /* Set cursor to pointer */
+    transition: background-color 0.3s ease; /* Smooth transition */
+    padding: 4px 20px; /* Add padding */
+    font-size: small; /* Set font size */
+    border: solid black 2px; /* Add border */
+    font-family: 'Ariel', sans-serif; /* Set font family */
+    font-weight: bolder; /* Set font weight */
+}
+
+.login__a {
+    display: block; /* Display as block */
+    text-align: center; /* Center-align text */
+    width: 40%;  /* Set width */
+    background-color: #ffcc00; /* Set background color */
+    color: #000; /* Set text color */
+    margin: 5px auto; /* Add margin */
+    border-radius: 5px; /* Round corners */
+    cursor: pointer; /* Set cursor to pointer */
+    transition: background-color 0.3s ease; /* Smooth transition */
+    padding: 4px 0px; /* Add padding */
+    font-size: small; /* Set font size */
+    border: solid black 2px; /* Add border */
+    text-decoration: none; /* Remove default underline */
+    font-family: 'Ariel', sans-serif; /* Set font family */
+    font-weight: bolder; /* Set font weight */
+}
+
+.login__button:hover {
+    background-color: #ffd633; /* Change background color on hover */
+}
+
+/* Contact form */
+.main.contact {
+    padding: 20px; /* Add padding */
+}
+
+.contact-form {
+    max-width: 600px; /* Set maximum width */
+    margin: 0 auto; /* Center horizontally */
+}
+
+.contact-form__title {
+    text-align: center; /* Center-align text */
+    font-size: 36px; /* Set font size */
+    margin-bottom: 20px; /* Add margin */
+    color: #333; /* Set text color */
+}
+
+.form-group {
+    margin-bottom: 20px; /* Add margin */
 }
 
 label {
-    display: block;
-    margin-bottom: 5px;
+    display: block; /* Display as block */
+    margin-bottom: 5px; /* Add margin */
 }
 
 input[type="text"],
 input[type="email"],
 textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd; 
-    border-radius: 5px;
+    width: 100%; /* Set width to fill container */
+    padding: 10px; /* Add padding */
+    border: 1px solid #ddd;  /* Add border */
+    border-radius: 5px; /* Round corners */
 }
 
 textarea {
-    resize: vertical; 
+    resize: vertical; /* Allow vertical resizing */
 }
 
-/* Cards Page */
-.main.cards {
-    padding: 20px;
+/* footer */ 
+footer {
+    background-color: #000; /* Set background color */
+    color: #fff; /* Set text color */
+    text-align: center; /* Center-align text */
+    padding: 20px; /* Add padding */
+    margin-top: 40px; /* Add margin */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2); /* Add box shadow */
 }
 
-.card-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
+.footer__text {
+    margin: 0; /* Remove margin */
 }
 
-.card {
-    position: relative; 
-    text-align: center; 
-}
-
-.card__image {
-    max-width: 100%;
-    border-radius: 10px;
-}
-
-.card__title {
-    margin-top: 10px;
-    color: #333; 
-}
-
-.card__price {
-    margin-bottom: 10px;
-    color: #666; 
-}
-
-.add-to-wishlist {
-    margin: 0 auto; 
-    display: block; 
-    font-weight: bold; 
-    margin-top: 10px;
-    cursor: pointer;
-}
-
-.card__quantity {
-    width: 50px;
-    padding: 5px;
-    border: 1px solid #ddd; 
-    border-radius: 5px;
-    text-align: center;
-}
-
-.card__wishlist {
-    background-color: #ffcc00; 
-    color: #000; 
-    padding: 8px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.card__wishlist:hover {
-    background-color: #ffd633; 
-}
-
-/* Account Page */
-.account {
-    text-align: center;
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 20px;
-    border: solid black 1px;
-    border-radius: 10px;
-}
-
-.account__title {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333; 
-}
-
-.account-details p,
-.account-options button,
-.account-options a {
-    margin-bottom: 10px;
-}
-
-.account-options button,
-.account-options a {
-    display: block;
-    width: 20%;
-}
-
-.button.change-password,
-.button.log-out,
-.button.delete-account {
-    margin: 0 auto; 
-    display: block; 
-    font-weight: bold; 
-    font-size: small;
-    margin-top: 10px;
-    background-color: #ffcc00; 
-    color: #000;
-    padding: 4px 20px;
-    border: solid black 2px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    text-align: center;
-}
-
-.button.change-password:hover,
-.button.log-out:hover {
-    background-color: #ffd633; 
-}
-
-/* Wishlist Page */
-.wishlist__title {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333; 
-}
-
-.wishlist-cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-
-.wishlist-card {
-    background-color: #fff;
-    border: 1px solid #000; 
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: calc(33.33% - 40px);
-    transition: transform 0.3s ease;
-}
-
-.wishlist-card:hover {
-    transform: translateY(-5px);
-}
-
-.wishlist-card h3 {
-    margin-top: 0;
-    color: #333; 
-}
-
-/* Create Account Page */
-.create-account {
-    padding: 20px;
-}
-
-.account-form {
-    max-width: 500px;
-    margin: 0 auto;
-    background-color: #fff;
-    border: none;
-    padding: 20px;
-}
-
-.form-title {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    font-weight: bold;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.error-message {
-    color: red;
-    font-size: 14px;
-}
-
-.create-account__button {
-    display: block;
-    width: 100%;
-    background-color: #ffcc00; 
-    color: #000;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    padding: 4px 20px;
-    font-weight: bold;
-    font-size: small;
-    border: solid black 2px;
-}
-
-.create-account__button:hover {
-    background-color: #ffd633; 
-}
-
-/* Login Page */
-.login {
-    padding: 20px;
-}
-
-.login-form {
-    max-width: 500px;
-    margin: 0 auto;
-    background-color: #fff;
-    border: none;
-    padding: 20px;
-}
-
-.form-title {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    font-weight: bold;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border: none; 
-    border-radius: 5px;
-    background-color: #f3f3f3; 
-}
-
-.login__button {
-    display: block;
-    text-align: center;
-    width: 40%; 
-    background-color: #ffcc00; 
-    color: #000; 
-    margin: 5px auto; 
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    padding: 4px 20px;
-    font-weight: bold;
-    font-size: small;
-    border: solid black 2px;
-}
-
-.login__button:hover {
-    background-color: #ffd633; 
-}
-
-.header__menu .nav-border {
-    border: 1px solid #000; 
-    border-radius: 5px; 
-    padding: 10px; 
-}
-
-.header__menu .nav-border a {
-    list-style: none;
-}
-
-.header__menu .nav-border a + a {
-    margin-left: 10px;
-}
-
-/* Collection page */
-.collection {
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
-}
-.collection__title {
-    margin-top: 0;
-}
-.collection__info {
-    margin-bottom: 10px;
-}
-.collection__info span {
-    margin-right: 10px;
-}
-.collection__actions {
-    margin-top: 10px;
-}
-.collection__actions a {
-    margin-right: 10px;
-    color: blue;
-    text-decoration: underline;
-    cursor: pointer;
-}
-.collection__likes,
-.collection__comments {
-    display: inline-block;
-    margin-right: 10px;
+.footer__email{
+    color: white; /* Set text color */
+    text-decoration: none; /* Remove default underline */
+    font-size: small; /* Set font size */
+    font-weight: bold; /* Set font weight */
 }
