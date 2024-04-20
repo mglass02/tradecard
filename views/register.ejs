@@ -24,26 +24,22 @@
     <main class="main create-account">
         <section class="account-form">
             <h2 class="form-title">Create Your Account</h2>
-            <form action="#" method="post" id="signUpForm">
+            <form action="/register" method="POST">
                 <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" required>
+                    <label for="usernameReg" name="usernameReg">Username</label>
+                    <input id="usernameReg" type="text" name="usernameReg">
                 </div>
                 <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
+                    <label for="emailReg">Email</label>
+                    <input id="emailReg" type="email" name="emailReg">
                 </div>
                 <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
-                    <span id="password-error" class="error-message"></span>
-                </div>
-                <div class="form-group">
-                    <label for="confirm-password">Confirm Password:</label>
-                    <input type="password" id="confirm-password" name="confirm-password" required>
+                    <label for="passwordReg">Password</label>
+                    <input id="passwordReg" type="password" name="passwordReg">
                 </div>
                 <button type="submit" class="button create-account__button">Create Account</button>
             </form>
+            <a href="/login" class="button login__a">Need to log in</a>
         </section>
     </main>
 
