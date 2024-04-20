@@ -56,17 +56,7 @@ app.get('/all_collections', (req, res) => {
 });
 
 // Define routes for members post log in
-app.get('/wishlist', (req, res) => {
-    res.render('wishlist'); 
-});
 
-app.get('/collection', (req, res) => {
-    res.render('collection'); 
-});
-
-app.get('/account', (req, res) => {
-    res.render('account'); 
-});
 
 // Handle contact form submission
 app.post('/contact', (req, res) => {
@@ -91,47 +81,13 @@ app.post('/contact', (req, res) => {
     //database: 'pok_project',
     //password: 'xme%559MG'
 
-// Handle sign up form submission
-app.post('/signUp', (req, res) => {
-    const { username, email, password } = req.body;
-    const signUpDate = new Date(); // Get the current date and time
+app.get('/register', (req, res)=>{
+    res.render('register')
+})
 
-    // Extract year, month, and day components
-    const year = signUpDate.getFullYear();
-    const month = signUpDate.getMonth() + 1;
-    const day = signUpDate.getDate();
-
-    // Format the date as "year/month/day"
-    const formattedDate = `${year}/${month}/${day}`;
-
-    // Logging data to console for MVP (CHANGE LATER)  
-    console.log('---------------------------');
-    console.log('New user has signed up:');
-    console.log(' - Username:', username);
-    console.log(' - Email:', email);
-    console.log(' - Password:', password);
-    console.log(' - Sign Up Date:', formattedDate); 
-
-    setTimeout(() => {
-        res.redirect('http://localhost:3000/home?message=Thanks+for+signing+up');
-    }, 1000); 
-});
-
-// handle log in form submission
-app.post('/logIn', (req, res) => {
-    const { uNameOrEmail, password } = req.body;
-
-    // Logging data to console for MVP (CHANGE LATER)  
-    console.log('---------------------------');
-    console.log('Member has attempted log in:');
-    console.log(' - Username/email:', uNameOrEmail);
-    console.log(' - Password:', password);
-
-    setTimeout(() => {
-        res.redirect('http://localhost:3000/home?message=You+are+logged+in');
-    }, 1000); 
-
-});
+app.get('/login', (req, res)=>{
+    res.render('login')
+})
 
 // Start the server
 app.listen(PORT, () => {
