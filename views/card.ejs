@@ -21,8 +21,38 @@
         </nav>
     </header>
 
-    <main>
-
+    <main class="card-container">
+        <% cards.forEach(card => { %>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-name"><%= card.name %></h3>
+                </div>
+                <div class="card-body">
+                    <div class="card-image">
+                        <img src="<%= card.image %>" alt="<%= card.name %> image">
+                    </div>
+                    <div class="card-details">
+                        <p><strong>Number:</strong> <%= card.number %></p>
+                        <p><strong>Types:</strong>
+                            <% card.types.forEach((type, index) => { %>
+                                <%= type.type_name %><%= index < card.types.length - 1 ? ',' : '' %>
+                            <% }); %>
+                        </p>
+                        <p><strong>Species:</strong> <%= card.species %></p>
+                        <p><strong>Height:</strong> <%= card.height %>m</p>
+                        <p><strong>Weight:</strong> <%= card.weight %>kg</p>
+                        <p><strong>Health Points:</strong> <%= card.hp %></p>
+                        <p><strong>Attack:</strong> <%= card.attack %></p>
+                        <p><strong>Defence:</strong> <%= card.defence %></p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <form action="/user_collection" method="post">
+                        <button href="/user_collection" type="submit" class="add-to-collection">Add to Collection</button>
+                    </form>
+                </div>
+            </div>
+        <% }); %>
     </main>
 
     <footer>
