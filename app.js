@@ -39,30 +39,46 @@ app.use(session({
     next();
   });
 
-// post routes for handling data 
-app.post('/register', async (req, res) => {
+  app.post('/register', async (req, res) => {
     try {
-      const hashedPassword = await bcrypt.hash(req.body.passwordReg, 10);
-      const userData = {
-        email: req.body.emailReg,
-        username: req.body.usernameReg,
-        password: hashedPassword,
-        registration_date: new Date()
-      };
-  
-      connection.query('INSERT INTO member SET ?', userData, (error, results) => {
-        if (error) {
-          console.error('Error inserting user:', error);
-          return res.redirect('/register');
-        }
-        console.log('User registered successfully');
-        res.redirect('/login');
-      });
+        // Check if the username already exists in the database
+        connection.query('SELECT * FROM member WHERE username = ?', [req.body.usernameReg], async (error, results) => {
+            if (error) {
+                console.error('Error checking username existence:', error);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            // If the username already exists, return a message to the user
+            if (results.length > 0) {
+                console.log('Username already exists');
+                return res.status(409).send('Username already exists')
+            } else {
+                // If the username is unique, proceed with user registration
+                const hashedPassword = await bcrypt.hash(req.body.passwordReg, 10);
+                const userData = {
+                    email: req.body.emailReg,
+                    username: req.body.usernameReg,
+                    password: hashedPassword,
+                    registration_date: new Date()
+                };
+
+                // Insert the new user into the database
+                connection.query('INSERT INTO member SET ?', userData, (error, results) => {
+                    if (error) {
+                        console.error('Error inserting user:', error);
+                        return res.status(500).send('Internal Server Error');
+                    }
+                    console.log('User registered successfully');
+                    res.redirect('/login');
+                });
+            }
+        });
     } catch (error) {
-      console.error('Error registering user:', error);
-      res.redirect('/register');
+        console.error('Error registering user:', error);
+        res.status(500).send('Internal Server Error');
     }
-  });
+});
+
   
 app.post('/login', async (req, res) => {
     const { usernameOrEmail, password } = req.body;
@@ -93,7 +109,25 @@ app.post('/login', async (req, res) => {
     }
   });
 
-// Define get routes to render pages 
+  app.post('/contact', (req, res) => {
+    const { name, email, message } = req.body;
+
+    // logging data to console for MVP (CHANGE LATER)  
+    console.log('---------------------------')
+    console.log('Received contact form submission:');
+    console.log(' - Name:', name);
+    console.log(' - Email:', email);
+    console.log(' - Message:', message);
+    
+    setTimeout(() => {
+        res.redirect('http://localhost:3000/home?message=Thanks+for+contacting+us');
+    }, 1000); 
+});
+
+app.post('/user_collection', (req, res) => {
+    res.redirect('/user_collection');
+  });
+
 app.get('/', (req, res) => {
     res.render('home'); 
 });
@@ -110,38 +144,61 @@ app.get('/contact', (req, res) => {
     res.render('contact'); 
 });
 
+app.get('/account', (req, res) => {
+    res.render('account')
+});
+
 app.get('/cards', (req, res) => {
-    res.render('cards'); 
-});
+    connection.query('SELECT * FROM pok_project.card ORDER BY RAND()', (error, results) => {
+      if (error) {
+        console.error('Error fetching card data:', error);
+        throw error;
+      }
+      // Store fetched cards in the cards array
+      cards = results;
+      // Render the cards page with the fetched cards
+      res.render('cards', { cards: results });
+    });
+  });
 
-app.get('/signUp', (req, res) => {
-    res.render('signUp'); 
-});
 
-app.get('/login', (req, res) => {
-    res.render('login'); 
-});
 
-app.get('/all_collections', (req, res) => {
-    res.render('all_collections'); 
-});
-
-// Handle contact form submission
-app.post('/contact', (req, res) => {
-    const { name, email, message } = req.body;
-
-    // logging data to console for MVP (CHANGE LATER)  
-    console.log('---------------------------')
-    console.log('Received contact form submission:');
-    console.log(' - Name:', name);
-    console.log(' - Email:', email);
-    console.log(' - Message:', message);
+// Define a route for handling requests to view a specific card
+app.get('/card', (req, res) => {
+    // Extract the card ID from the query parameters
+    const cardId = req.query.id;
     
-    setTimeout(() => {
-        res.redirect('http://localhost:3000/home?message=Thanks+for+contacting+us');
-    }, 1000); 
-    
-});
+    // Query the database to fetch data for the specified card
+    connection.query('SELECT card.*, type_of_card.type_name FROM pok_project.card INNER JOIN pok_project.card_type ON card.card_id = card_type.card_id INNER JOIN pok_project.type_of_card ON card_type.type_id = type_of_card.type_id WHERE card.card_id = ?', [cardId], (error, results) => {
+      // Handle any errors that occur during the database query
+      if (error) {
+        console.error('Error fetching card data:', error);
+        throw error;
+      }
+  
+      // Create a map to store card data, keyed by card ID
+      const cardsMap = new Map();
+      
+      // Iterate over the results of the database query
+      results.forEach(card => {
+        // Extract the card ID and type name from the query results
+        const { card_id, type_name, ...rest } = card;
+        
+        // If the card ID is not already in the map, add it with an empty types array
+        if (!cardsMap.has(card_id)) {
+          cardsMap.set(card_id, { ...rest, types: [] });
+        }
+        
+        // Add the type name to the types array for the current card
+        cardsMap.get(card_id).types.push({ type_name });
+      });
+      // Convert the map values to an array of card objects
+      const cards = Array.from(cardsMap.values());
+      
+      // Render the 'card' template with the card data
+      res.render('card', { cards });
+    });
+  });
 
 app.get('/register', (req, res)=>{
     res.render('register')
@@ -150,6 +207,41 @@ app.get('/register', (req, res)=>{
 app.get('/login', (req, res)=>{
     res.render('login')
 })
+
+app.get('/user_collection', (req, res)=>{
+    res.render('user_collection')
+})
+
+// routes to handle sorting of cards
+// Route to handle sorting by number (ASC)
+app.get('/sort_by_num_asc', (req, res) => {
+    let ordered = cards.sort((a, b) => a.card_id - b.card_id);
+    res.render('cards', { cards: ordered });
+  });
+  
+  // Route to handle sorting by number (DESC)
+  app.get('/sort_by_num_desc', (req, res) => {  
+    let ordered = cards.sort((a, b) => b.card_id - a.card_id);
+    res.render('cards', { cards: ordered });
+  });
+  
+  // Route to handle sorting Sorting Alphabetically (A-Z)
+  app.get('/alpha_az', (req, res) =>{
+    let ordered = cards.sort((a, b) => {
+      // Use localeCompare for string comparison
+      return a.name.localeCompare(b.name);
+    });
+    res.render('cards', {cards: ordered});
+  })
+  
+  // Route to handle sorting Sorting Alphabetically (Z-A)
+  app.get('/alpha_za', (req, res) =>{
+    let ordered = cards.sort((a, b) => {
+      // Use localeCompare for string comparison
+      return b.name.localeCompare(a.name);
+    });
+    res.render('cards', {cards: ordered});
+  })
 
 // Set port number
 const port = 3000;
