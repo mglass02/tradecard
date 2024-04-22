@@ -81,27 +81,6 @@ img{
     background-color: #e9bf1b; /* Change background color on hover */
 }
 
-/* filter */
-
-.filter{
-    margin: 20px;
-    text-align: center;
-}
-
-.filter a{
-    text-decoration: none;
-    border-right: solid black 2px;
-    border-left: solid black 2px;
-    padding: 5px;
-    margin: auto;
-}
-
-.filter a:hover{
-    padding: 5px;
-    color: #000;
-    font-weight: bolder;
-}
-
 /* about page */
 .about__container {
     max-width: 800px; /* Set maximum width */
@@ -185,109 +164,135 @@ p {
     font-weight: bolder; /* Set font weight */
 }
 
-/* home page */
-.home__button{
-    display: inline; /* Display as inline */
-    width: 20%; /* Set width */
-    margin: 10px auto; /* Add margin */
-    background-color: #ffcc00; /* Set background color */
-    color: #000; /* Set text color */
-    border: none; /* Remove border */
-    border-radius: 5px; /* Round corners */
-    cursor: pointer; /* Set cursor to pointer */
-    transition: background-color 0.3s ease; /* Smooth transition */
-    padding: 4px 20px; /* Add padding */
-    font-weight: bold; /* Set font weight */
-    font-size: small; /* Set font size */
-    border: solid black 2px; /* Add border */
-    text-decoration: none; /* Remove default underline */
+/* filter */
+.dropdown-container {
+    display: flex;
+    justify-content: center; /* Horizontally center the button */
+    align-items: center; /* Vertically center the button */
+    height: 100px; /* Example height, adjust as needed */
 }
 
-.home_login_signup {
-    margin: 20px auto; /* Add margin */
+.dropdown button {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bolder;
+    background-color: black;
+    color: #ffcc00;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 20px;
 }
-/* Header Styles */
+
+.dropdown button:hover + .content {
+    display: block;
+}
+
+.dropdown .content:hover{
+    display: block;
+}
+
+.dropdown a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+}
+
+.dropdown .content {
+    display: none;
+    position: absolute;
+    background-color: black;
+    min-width: 100px;
+    box-shadow: 2px 2px 5px black;
+}
+
+
+/* home page */
+.home{
+    text-align: center;
+}
+
+
+/* Header */
 .header {
-    background-color: #ffcc00; /* Set background color */
-    color: #000; /* Set text color */
-    padding: 20px; /* Add padding */
-    text-align: center; /* Center-align text */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add box shadow */
-    font-family: 'Courier New', Courier, monospace; /* Set font family */
+    background-color: #ffcc00;
+    color: #000;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0px auto;
 }
 
 .header__title {
-    margin: 0; /* Remove margin */
-    background-color: #000; /* Set background color */
-    color: #ffcc00; /* Set text color */
-    padding: 10px 20px; /* Add padding */
-    display: inline-block; /* Display as inline block */
-    border-radius: 5px; /* Round corners */
+    margin: 0;
+    background-color: #000;
+    color: #ffcc00;
+    padding: 10px 20px;
+    display: inline-block;
+    border-radius: 5px;
 }
 
 .header__nav {
-    display: flex; /* Use flexbox for layout */
-    justify-content: center; /* Center-align children horizontally */
-    margin-top: 20px; /* Add margin */
-}
-
-.header__link {
-    font-weight: bold; /* Set font weight */
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Updated */
+    margin-top: 20px;
 }
 
 .header__menu {
-    list-style-type: none; /* Remove default list style */
-    padding: 0; /* Remove default padding */
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    margin: 0px auto;
 }
 
-.header__menu li {
-    display: inline; /* Display as inline */
-    margin-right: 20px; /* Add margin */
-}
-
-.header__dropdown {
-    position: relative; /* Set position to relative */
+.header__menu-item--dropdown {
+    margin-left: auto; /* Push the dropdown menu to the far right */
 }
 
 .header__button {
-    background-color: #000; /* Set background color */
-    color: #fff; /* Set text color */
-    padding: 10px 20px; /* Add padding */
-    margin-top: 20px; /* Add margin */
-    border-radius: 20px; /* Round corners */
-    cursor: pointer; /* Set cursor to pointer */
+    background-color: #000;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: none; /* Remove border */
+    margin: -4px 5px;
 }
 
-.header__dropdown-content {
-    display: none; /* Hide by default */
-    position: absolute; /* Set position to absolute */
-    top: 100%; /* Align to bottom of parent */
-    right: 0; /* Align to right of parent */
-    background-color: #fff; /* Set background color */
-    min-width: 120px; /* Set minimum width */
-    z-index: 1; /* Set z-index */
-    border: 1px solid #ddd; /* Add border */
-    border-radius: 5px; /* Round corners */
+.dropdown {
+    position: relative;
 }
 
-.header__dropdown-content a {
-    display: block; /* Display as block */
-    padding: 10px 20px; /* Add padding */
-    color: #000; /* Set text color */
-    text-decoration: none; /* Remove default underline */
+.content {
+    display: none;
+    position: absolute;
+    top: calc(100% + 5px); /* Position below the button */
+    left: 0; /* Align with the left edge of the button */
+    background-color: #fff;
+    min-width: 120px;
+    z-index: 1;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: -4px 0px;
 }
 
-.header__dropdown-content a:hover {
-    background-color: #f4f4f4; /* Change background color on hover */
+.header__menu-item--dropdown:hover .content,
+.content:hover {
+    display: block;
 }
 
-.header__dropdown:hover .header__dropdown-content {
-    display: block; /* Display on hover */
+.header__link {
+    font-weight: bold;
+    color: #000;
+    text-decoration: none;
+    padding: 0 15px;
 }
 
-.header__menu li a {
-    color: #000; /* Set text color */
-    text-decoration: none; /* Remove default underline */
+.header__link:hover {
+    color: #333; /* Update hover color */
 }
 
 /* About Page */
@@ -432,6 +437,36 @@ p {
     background-color: #ffd633; /* Change background color on hover */
 }
 
+/* user collections */
+.user_collection ul{
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.collection_container{
+    border: 2px solid black;
+    box-shadow: 0 0 10px grey;
+    text-decoration: none;
+    list-style-type: none;
+    padding: 20px;
+    margin: 20px auto;
+    width: 50%;
+}
+
+.collectionBtn{
+    font-family: 'Courier New', Courier, monospace;
+    color: black;
+    margin: 10px auto; /* Set top and bottom margin to auto and left and right margins to 10px */
+    text-align: center; /* Align text to center */
+    text-decoration: none;
+    display: block; /* Make it a block-level element */
+    width: fit-content; /* Set width to fit the content */
+}
+
+.collectionBtn:hover{
+    background: grey;
+}
+
 /* Contact form */
 .main.contact {
     padding: 20px; /* Add padding */
@@ -469,6 +504,26 @@ textarea {
 
 textarea {
     resize: vertical; /* Allow vertical resizing */
+}
+
+/* Account page */
+.member-container{
+    border: 2px solid black;
+    margin: 20px auto;
+    width: 40%;
+    padding: 20px;
+}
+
+.member-container h2, li{
+    margin-top: 10px;
+}
+
+.member-container li{
+    padding-left: 10px;
+}
+
+.member-info{
+    padding: 5px 20px;
 }
 
 /* footer */ 
