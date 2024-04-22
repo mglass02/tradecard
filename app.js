@@ -51,7 +51,7 @@ app.use(session({
             // If the username already exists, return a message to the user
             if (results.length > 0) {
                 console.log('Username already exists');
-                return res.status(409).send('Username already exists')
+                res.redirect('/register?msg=username-already-exists')
             } else {
                 // If the username is unique, proceed with user registration
                 const hashedPassword = await bcrypt.hash(req.body.passwordReg, 10);
@@ -69,13 +69,13 @@ app.use(session({
                         return res.status(500).send('Internal Server Error');
                     }
                     console.log('User registered successfully');
-                    res.redirect('/login');
+                    res.redirect('/login?msg=Successfully-signed-up');
                 });
             }
         });
     } catch (error) {
         console.error('Error registering user:', error);
-        res.status(500).send('Internal Server Error');
+        res.redirect('/register?msg=Unsuccessful-sign-up,-try-again...');
     }
 });
 
@@ -87,25 +87,24 @@ app.post('/login', async (req, res) => {
       connection.query(query, [usernameOrEmail, usernameOrEmail], async (error, results) => {
         if (error) {
           console.error('Error querying database:', error);
-          return res.status(500).send('Internal Server Error');
+          res.redirect('/login?msg=Unsuccessful-login,-try-again...');
         }
         if (results.length === 0) {
-          return res.status(401).send('Invalid username or email');
+          res.redirect('/login?msg=Invalid-username,-try-again...');
         }
         const user = results[0];
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
-          return res.status(401).send('Invalid password');
+            res.redirect('/login?msg=Invalid-password,-try-again...');
         }
         req.session.userId = user.member_id;
         req.user = { id: user.member_id };
         console.log("User signed in")
-        console.log(req.user)
-        res.render("home.ejs");
+        res.render("home.ejs", { user: req.user });
       });
     } catch (error) {
       console.error('Error logging in:', error);
-      res.status(500).send('Internal Server Error');
+      res.redirect('/login?msg=Error-logging-in,-try-again...');
     }
   });
 
@@ -125,43 +124,69 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/user_collection', (req, res) => {
-    res.redirect('/user_collection');
-  });
+    res.redirect('user_collection', { user: req.user });
+});
 
 app.get('/', (req, res) => {
-    res.render('home'); 
+    res.render('home', { user: req.user }); 
 });
 
 app.get('/home', (req, res) => {
-    res.render('home'); 
+    res.render('home', { user: req.user }); 
 });
 
 app.get('/about', (req, res) => {
-    res.render('about');
+    res.render('about', { user: req.user });
 });
 
 app.get('/contact', (req, res) => {
-    res.render('contact'); 
+    res.render('contact', { user: req.user }); 
 });
 
 app.get('/account', (req, res) => {
-    res.render('account')
+    try {
+        const memberId = req.user.id;
+
+        // Query to retrieve user information from the member table
+        const sqlQuery = 'SELECT username, email, DATE_FORMAT(registration_date, "%a %b %d %Y") AS registration_date FROM member WHERE member_id = ?';
+
+        // Execute the SQL query
+        connection.query(sqlQuery, [memberId], (error, results) => {
+            
+            if (error) {
+                console.error('Error fetching user information:', error);
+                // Send an error response
+                res.redirect('/home?msg=Error-getting-user-info...');
+                return;
+            }
+
+            // Check if user information is found
+            if (results.length > 0) {
+                // Pass user information to the account template
+                res.render('account', { user: req.user, userData: results[0] });
+            } else {
+                // If user information is not found, send a not found response
+                res.redirect('/home?msg=User-not-found...');
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching user information:', error);
+        // Send an error response
+        res.redirect('/home?msg=Error-getting-account-info');
+    }
 });
 
 app.get('/cards', (req, res) => {
     connection.query('SELECT * FROM pok_project.card ORDER BY RAND()', (error, results) => {
       if (error) {
-        console.error('Error fetching card data:', error);
-        throw error;
+        res.redirect('/home?msg=Error-fetching-card-data');
       }
       // Store fetched cards in the cards array
       cards = results;
       // Render the cards page with the fetched cards
-      res.render('cards', { cards: results });
+      res.render('cards', { cards: results, user: req.user });
     });
   });
-
-
 
 // Define a route for handling requests to view a specific card
 app.get('/card', (req, res) => {
@@ -196,33 +221,139 @@ app.get('/card', (req, res) => {
       const cards = Array.from(cardsMap.values());
       
       // Render the 'card' template with the card data
-      res.render('card', { cards });
+      res.render('card', { cards, user: req.user });
     });
   });
 
 app.get('/register', (req, res)=>{
-    res.render('register')
+    res.render('register', { user: req.user })
 })
 
 app.get('/login', (req, res)=>{
-    res.render('login')
+    res.render('login', { user: req.user })
 })
 
-app.get('/user_collection', (req, res)=>{
-    res.render('user_collection')
-})
+app.get('/logout', (req, res) => {
+    // Clear the user session data
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Error destroying session:', err);
+            // Handle error appropriately, maybe redirect to an error page
+            return res.redirect('/error');
+        }
+        // Redirect the user to the homepage
+        res.redirect('/');
+    });
+});
 
-// routes to handle sorting of cards
-// Route to handle sorting by number (ASC)
-app.get('/sort_by_num_asc', (req, res) => {
-    let ordered = cards.sort((a, b) => a.card_id - b.card_id);
-    res.render('cards', { cards: ordered });
-  });
+// Route to render the user's collection page
+app.get('/user_collection', async (req, res) => {
+    try {
+        // Retrieve the user's member_id from req.user
+        const memberId = req.user.id;
+
+        // SQL query to select collections based on member_id
+        const sqlQuery = 'SELECT * FROM user_collection WHERE member_id = ?';
+
+        // Execute the SQL query
+        connection.query(sqlQuery, [memberId], (error, results) => {
+            if (error) {
+                console.error('Error fetching collections:', error);
+                // Send an error response
+                res.status(500).send('Internal Server Error');
+                return;
+            }
+
+            // Pass the retrieved collections data to the template
+            res.render('user_collection', { collections: results, user: req.user });
+        });
+    } catch (error) {
+        console.error('Error fetching collections:', error);
+        // Send an error response
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.get('/all_collections', async (req, res) => {
+    try {
+        // Retrieve the user's member_id from req.user
+        //const memberId = req.user.id;
+
+        // SQL query to select collections and corresponding member names
+        const sqlQuery = `
+        SELECT user_collection.*, member.username AS username 
+        FROM user_collection 
+        INNER JOIN member ON user_collection.member_id = member.member_id
+        
+        `;
+
+        // Execute the SQL query
+        connection.query(sqlQuery, (error, results) => {
+            if (error) {
+                console.error('Error fetching collections:', error);
+                // Send an error response
+                res.status(500).send('Internal Server Error');
+                return;
+            }
+
+            // Pass the retrieved collections data to the template
+            res.render('all_collections', { collections: results, user: req.user });
+        });
+    } catch (error) {
+        console.error('Error fetching collections:', error);
+        // Send an error response
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.get('/create_collection', async (req, res) => {
+    try {
+        // Retrieve the user's information from req.user or wherever it's stored
+        const memberId = req.user.id; // Adjust accordingly to access user information
+
+        // Perform the insert query to add a new collection for the user
+        await connection.query('INSERT INTO user_collection (member_id) VALUES (?)', [memberId]);
+
+        // Redirect the user to their collection page
+        res.redirect('/user_collection');
+    } catch (error) {
+        console.error('Error creating collection:', error);
+        // Send an error response
+        res.status(500).send('Internal Server Error');
+    }
+});
   
+app.get('/delete_collection', async (req, res) => {
+    try {
+        // Retrieve the user's information from req.user or wherever it's stored
+        const memberId = req.user.id; // Adjust accordingly to access user information
+
+        // Perform the insert query to add a new collection for the user
+        await connection.query('INSERT INTO user_collection (member_id) VALUES (?)', [memberId]);
+
+        // Redirect the user to their collection page
+        res.redirect('/user_collection');
+    } catch (error) {
+        console.error('Error deleting collection:', error);
+        // Send an error response
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.get('/user_specific_collection', (req, res) =>{
+    res.render('user_specific_collection')
+})
+
+// Route to handle sorting by number (DESC)
+app.get('/sort_by_num_asc', (req, res) => {  
+    let ordered = cards.sort((a, b) => a.card_id - b.card_id);
+    res.render('cards', { cards: ordered, user: req.user });
+  });
+
   // Route to handle sorting by number (DESC)
   app.get('/sort_by_num_desc', (req, res) => {  
     let ordered = cards.sort((a, b) => b.card_id - a.card_id);
-    res.render('cards', { cards: ordered });
+    res.render('cards', { cards: ordered, user: req.user });
   });
   
   // Route to handle sorting Sorting Alphabetically (A-Z)
@@ -231,7 +362,7 @@ app.get('/sort_by_num_asc', (req, res) => {
       // Use localeCompare for string comparison
       return a.name.localeCompare(b.name);
     });
-    res.render('cards', {cards: ordered});
+    res.render('cards', {cards: ordered, user: req.user });
   })
   
   // Route to handle sorting Sorting Alphabetically (Z-A)
@@ -240,7 +371,7 @@ app.get('/sort_by_num_asc', (req, res) => {
       // Use localeCompare for string comparison
       return b.name.localeCompare(a.name);
     });
-    res.render('cards', {cards: ordered});
+    res.render('cards', {cards: ordered, user: req.user });
   })
 
 // Set port number
