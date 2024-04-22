@@ -16,6 +16,31 @@
                 <li><a href="/about" class="header__link">About</a></li>
                 <li><a href="/contact" class="header__link">Contact</a></li>
                 <li><a href="/cards" class="header__link">Cards</a></li>
+                <% if (user) { %>
+                    <li class="header__menu-item--dropdown">
+                        <div class="dropdown">
+                            <button class="header__button">Collections</button>
+                            <div class="content">
+                                <a href="/all_collections" class="header__link">View others</a>
+                                <a href="/user_collection" class="header__link">View mine</a>
+                            </div>
+                        </div>
+                    </li>
+                <% } %>
+                <li class="header__menu-item--dropdown">
+                    <div class="dropdown">
+                        <button class="header__button">Member access</button>
+                        <div class="content">
+                            <% if (user) { %>
+                                <a href="/account" class="header__link">Account</a>
+                                <a href="/logout" class="header__link">Log out</a>
+                            <% } else { %>
+                                <a href="/register" class="header__link">Register</a>
+                                <a href="/login" class="header__link">Log in</a>
+                            <% } %>
+                        </div>
+                    </div>
+                </li>
                 <li class="nav-border" id="memberNav"></li>
             </ul>
         </nav>
@@ -23,14 +48,17 @@
     
     <main class="cards__container">
         <h2>Cards</h2>
-        <div class="filter">
-            
-              <a href="/sort_by_num_asc">Sort by Number (Ascending)</a>
-              <a href="/sort_by_num_desc">Sort by Number (Descending)</a>
-              <a href="/alpha_az">Sort Alphabetically (A-Z)</a>
-              <a href="/alpha_za">Sort Alphabetically (Z-A)</a>
-            
+
+        <div class="dropdown">
+            <button>Sort search</button>
+            <div class="content">
+                <a href="/sort_by_num_asc">Sort by Number (Ascending)</a>
+                <a href="/sort_by_num_desc">Sort by Number (Descending)</a>
+                <a href="/alpha_az">Sort Alphabetically (A-Z)</a>
+                <a href="/alpha_za">Sort Alphabetically (Z-A)</a>
+            </div>
         </div>
+
         <div class="cards__grid">
             <% cards.forEach(card => { %>
                 <div class="individual__card">
