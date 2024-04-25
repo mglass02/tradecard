@@ -51,7 +51,21 @@
         <li><strong>Username:</strong> <%= userData.username %></li>
         <li><strong>Email:</strong> <%= userData.email %></li>
         <li><strong>Registration Date:</strong> <%= userData.registration_date %></li>
+        <form action="/update_member_info" method="POST" class="account_form">
+            <h3>Update information</h3>
+            <label for="newEmail">New Email:</label>
+            <input type="email" id="newEmail" name="newEmail" placeholder="Enter new email">
+    
+            <h4>AND / OR</h4>
+
+            <label for="newPassword">New Password:</label>
+            <input type="password" id="newPassword" name="newPassword" placeholder="Enter new password">
+    
+            <button type="submit">Update Info</button>
+        </form>
     </main>
+
+    
 
     <footer>
         <p class="footer__text">&copy; 2024 Tradecard. All rights reserved.</p>
