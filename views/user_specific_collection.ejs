@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>user collections</title>
-    <link rel="stylesheet" href="styles/ui.css">
+    <title>user specific collection</title>
+    <link rel="stylesheet" href="/styles/ui.css">
 </head>
 
 <body>
@@ -18,10 +18,12 @@
                 <li><a href="/cards" class="header__link">Cards</a></li>
                 <% if (user) { %>
                     <li class="header__menu-item--dropdown">
-                        <button class="header__button">My Collections</button>
-                        <div class="content">
-                            <a href="/all_collections" class="header__link">View others</a> 
-                            <a href="/user_collection" class="header__link">My Collections</a> 
+                        <div class="dropdown">
+                            <button class="header__button">Collections</button>
+                            <div class="content">
+                                <a href="/all_collections" class="header__link">View others</a>
+                                <a href="/user_collection" class="header__link">View mine</a>
+                            </div>
                         </div>
                     </li>
                 <% } %>
@@ -44,8 +46,37 @@
         </nav>
     </header>
 
-    <main>
-        
+    <main class="cards__container">
+        <h2>Cards</h2>
+
+        <div class="cards__grid">
+            <% cards.forEach(card => { %>
+                <div class="individual__card">
+                    <div class="card-header-specific">
+                        <h3 class="card-name"><%= card.name %></h3>
+                    </div>
+                    <img src="<%= card.image %>" alt="<%= card.name %> image">
+                    <div class="specific_card">
+                        <p><strong>Number:</strong> <%= card.number %></p>
+                        <p><strong>Species:</strong> <%= card.species %></p>
+                        <p><strong>Height:</strong> <%= card.height %>m</p>
+                        <p><strong>Weight:</strong> <%= card.weight %>kg</p>
+                        <p><strong>Health Points:</strong> <%= card.hp %></p>
+                        <p><strong>Attack:</strong> <%= card.attack %></p>
+                        <p><strong>Defence:</strong> <%= card.defence %></p>
+                        <div class="card-footer-specific">
+                            <form action="/remove_card_from_collection" method="post">
+                                <!-- Hidden input field for card_id -->
+                                <input type="hidden" name="card_id" value="<%= card.card_id %>">
+                                <!-- Hidden input field for member_id -->
+                                <input type="hidden" name="user_collection_id" value="<%= user_collection_id %>">
+                                <button type="submit" class="add-to-collection">Remove from collection</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
     </main>
 
     <footer>
