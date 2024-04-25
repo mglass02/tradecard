@@ -48,15 +48,23 @@
 
     <main class="user_collection">
         <h1>All collections</h1>
+        <div class="dropdown">
+            <button>Sort search</button>
+            <div class="content">
+                <a href="/all_collections?sort=likes_asc">Sort by Likes (Ascending)</a>
+                <a href="/all_collections?sort=likes_desc">Sort by Likes (Descending)</a>
+            </div>
+        </div>
+        
         <% if (collections.length > 0) { %>
             <ul>
                 <% collections.forEach(collection => { %>
                     <li class="collection_container">
-                        <h3><%= collection.name %> </h3>
-                        <h3><%= collection.username %></h3>
+                        <h3>Name: <%= collection.name %> </h3>
+                        <h3>Owner: <%= collection.username %></h3>
                         <p><%= collection.description %></p>
-                        <p>Likes: <%= collection.likes %></p>
-                        <a href="/user_specific_collection" id="userSpecColBtn">View collection</a>
+                        <a href="/like_collection/<%= collection.user_collection_id %>" class="like_collection">Likes: <%= collection.likes %></a>
+                        <a href="/user_specific_collection/<%=collection.user_collection_id %>" id="userSpecColBtn">View collection</a>
                     </li>
                 <% }); %>
             </ul>
