@@ -48,7 +48,11 @@
 
     <main class="user_collection">
         <h1>Your Collections</h1>
-        <a href="/create_collection" id="createCollectionBtn" class="collectionBtn">Create New Collection</a>
+        <form action="/create_collection" method="GET" class="create_form">
+            <label for="collectionName"><strong>Collection Name:</strong></label>
+            <input type="text" id="collectionName" name="collectionName" required>
+            <button type="submit" id="createCollectionBtn" class="create-account__button">Create</button>
+        </form>
         <% if (collections.length > 0) { %>
             <ul>
                 <% collections.forEach(collection => { %>
@@ -56,8 +60,8 @@
                         <h3><%= collection.name %></h3>
                         <p><%= collection.description %></p>
                         <p>Likes: <%= collection.likes %></p>
-                        <a href="/user_specific_collection" id="userSpecColBtn">View collection</a>
-                        <a href="/delete_collection" id="deleteCollectionBtn" class="collectionBtn">Delete Collection</a>
+                        <a href="/user_specific_collection/<%=collection.user_collection_id %>" id="userSpecColBtn">View collection</a>
+                        <a href="/delete_collection/<%= collection.user_collection_id %>" id="deleteCollectionBtn" class="collectionBtn">Delete Collection</a>
                     </li>
                 <% }); %>
             </ul>
