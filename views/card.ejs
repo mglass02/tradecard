@@ -33,6 +33,7 @@
                         <div class="content">
                             <% if (user) { %>
                                 <a href="/account" class="header__link">Account</a>
+                                <a href="/message_inbox" class="header__link">Message inbox</a>
                                 <a href="/logout" class="header__link">Log out</a>
                             <% } else { %>
                                 <a href="/register" class="header__link">Register</a>
@@ -74,9 +75,17 @@
 
                 <% if (user) { %>
                     <div class="card-footer">
-                      <form action="/user_collection" method="post">
-                        <button href="/user_collection" type="submit" class="add-to-collection">Add to Collection</button>
-                      </form>
+                        <form action="/add_to_collection" method="post">
+                            <select name="user_collection_id" id="user_collection_id">
+                                <% collections.forEach(collection => { %>
+                                    <option value="<%= collection.user_collection_id %>"><%= collection.name %></option>
+                                <% }); %>
+                            </select>
+                            <% cards.forEach(card => { %>
+                                <input type="hidden" name="card_id" value="<%= card_id %>">
+                                <button type="submit" class="add-to-collection">Add to Collection</button>
+                            <% }); %>
+                        </form>
                     </div>
                 <% } else { %>
                     <div class="card-footer">
