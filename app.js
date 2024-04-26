@@ -19,41 +19,41 @@ app.set("view engine", "ejs");
 app.set('views', path.join(__dirname, 'views'));
 
 // Serve static files from the public directory
-app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(express.static('public'));
 
 // Middleware for parsing JSON and URL-encoded form data
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Set up session middleware
 app.use(session({
     secret: 'session_key',
     resave: false,
     saveUninitialized: false
-  }));
-  
-  // Middleware to set req.user based on session data
-  app.use((req, res, next) => {
+}));
+
+// Middleware to set req.user based on session data
+app.use((req, res, next) => {
     req.user = req.session.userId ? { id: req.session.userId } : null;
     next();
-  });
+});
 
-  app.post('/register', async (req, res) => {
+// post route to handle registering a new user
+app.post('/register', async (req, res) => {
     try {
-        // Check if the username already exists in the database
+        // Check if username already exists in the database
         connection.query('SELECT * FROM member WHERE username = ?', [req.body.usernameReg], async (error, results) => {
             if (error) {
                 console.error('Error checking username existence:', error);
                 return res.status(500).send('Internal Server Error');
             }
 
-            // If the username already exists, return a message to the user
+            // If the username exists, return a message to the user
             if (results.length > 0) {
                 console.log('Username already exists');
                 res.redirect('/register?msg=username-already-exists')
             } else {
-                // If the username is unique, proceed with user registration
+                // If the username is unique, continue
                 const hashedPassword = await bcrypt.hash(req.body.passwordReg, 10);
                 const userData = {
                     email: req.body.emailReg,
@@ -79,36 +79,39 @@ app.use(session({
     }
 });
 
-  
+// post route to handle logging in 
 app.post('/login', async (req, res) => {
+    // access username or email and password from form
     const { usernameOrEmail, password } = req.body;
+    // check if username/email and password are in database
     try {
-      const query = 'SELECT * FROM member WHERE email = ? OR username = ?';
-      connection.query(query, [usernameOrEmail, usernameOrEmail], async (error, results) => {
-        if (error) {
-          console.error('Error querying database:', error);
-          res.redirect('/login?msg=Unsuccessful-login,-try-again...');
-        }
-        if (results.length === 0) {
-          res.redirect('/login?msg=Invalid-username,-try-again...');
-        }
-        const user = results[0];
-        const passwordMatch = await bcrypt.compare(password, user.password);
-        if (!passwordMatch) {
-            res.redirect('/login?msg=Invalid-password,-try-again...');
-        }
-        req.session.userId = user.member_id;
-        req.user = { id: user.member_id };
-        console.log("User signed in")
-        res.render("home.ejs", { user: req.user });
-      });
+        const query = 'SELECT * FROM member WHERE email = ? OR username = ?';
+        connection.query(query, [usernameOrEmail, usernameOrEmail], async (error, results) => {
+            if (error) {
+                console.error('Error querying database:', error);
+                res.redirect('/login?msg=Unsuccessful-login,-try-again...');
+            }
+            if (results.length === 0) {
+                res.redirect('/login?msg=Invalid-username,-try-again...');
+            }
+            const user = results[0];
+            const passwordMatch = await bcrypt.compare(password, user.password);
+            if (!passwordMatch) {
+                res.redirect('/login?msg=Invalid-password,-try-again...');
+            }
+            req.session.userId = user.member_id;
+            req.user = { id: user.member_id };
+            console.log("User signed in")
+            res.render("home.ejs", { user: req.user });
+        });
     } catch (error) {
-      console.error('Error logging in:', error);
-      res.redirect('/login?msg=Error-logging-in,-try-again...');
+        console.error('Error logging in:', error);
+        res.redirect('/login?msg=Error-logging-in,-try-again...');
     }
-  });
+});
 
-  app.post('/contact', (req, res) => {
+// post route to handle contact form 
+app.post('/contact', (req, res) => {
     const { name, email, message } = req.body;
 
     // logging data to console for MVP (CHANGE LATER)  
@@ -117,10 +120,10 @@ app.post('/login', async (req, res) => {
     console.log(' - Name:', name);
     console.log(' - Email:', email);
     console.log(' - Message:', message);
-    
+
     setTimeout(() => {
         res.redirect('http://localhost:3000/home?message=Thanks+for+contacting+us');
-    }, 1000); 
+    }, 1000);
 });
 
 app.post('/user_collection', (req, res) => {
@@ -128,11 +131,11 @@ app.post('/user_collection', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.render('home', { user: req.user }); 
+    res.render('home', { user: req.user });
 });
 
 app.get('/home', (req, res) => {
-    res.render('home', { user: req.user }); 
+    res.render('home', { user: req.user });
 });
 
 app.get('/about', (req, res) => {
@@ -140,19 +143,21 @@ app.get('/about', (req, res) => {
 });
 
 app.get('/contact', (req, res) => {
-    res.render('contact', { user: req.user }); 
+    res.render('contact', { user: req.user });
 });
 
+// handle account page
 app.get('/account', (req, res) => {
     try {
+        // save memberId from user variable
         const memberId = req.user.id;
 
-        // Query to retrieve user information from the member table
+        // Retrieve user information from the member table
         const sqlQuery = 'SELECT username, email, DATE_FORMAT(registration_date, "%a %b %d %Y") AS registration_date FROM member WHERE member_id = ?';
 
-        // Execute the SQL query
+        // Pass into query
         connection.query(sqlQuery, [memberId], (error, results) => {
-            
+
             if (error) {
                 console.error('Error fetching user information:', error);
                 // Send an error response
@@ -177,69 +182,81 @@ app.get('/account', (req, res) => {
 });
 
 app.get('/cards', (req, res) => {
+    // get all cards from card table and order randomly 
     connection.query('SELECT * FROM pok_project.card ORDER BY RAND()', (error, results) => {
-      if (error) {
-        res.redirect('/home?msg=Error-fetching-card-data');
-      }
-      // Store fetched cards in the cards array
-      cards = results;
-      // Render the cards page with the fetched cards
-      res.render('cards', { cards: results, user: req.user });
-    });
-  });
-
-// Define a route for handling requests to view a specific card
-app.get('/card', (req, res) => {
-    // Extract the card ID from the query parameters
-    const cardId = req.query.id;
-    
-    // Query the database to fetch data for the specified card
-    connection.query('SELECT card.*, type_of_card.type_name FROM pok_project.card INNER JOIN pok_project.card_type ON card.card_id = card_type.card_id INNER JOIN pok_project.type_of_card ON card_type.type_id = type_of_card.type_id WHERE card.card_id = ?', [cardId], (error, results) => {
-      // Handle any errors that occur during the database query
-      if (error) {
-        console.error('Error fetching card data:', error);
-        throw error;
-      }
-  
-      // Create a map to store card data, keyed by card ID
-      const cardsMap = new Map();
-      
-      // Iterate over the results of the database query
-      results.forEach(card => {
-        // Extract the card ID and type name from the query results
-        const { card_id, type_name, ...rest } = card;
-        
-        // If the card ID is not already in the map, add it with an empty types array
-        if (!cardsMap.has(card_id)) {
-          cardsMap.set(card_id, { ...rest, types: [] });
+        if (error) {
+            res.redirect('/home?msg=Error-fetching-card-data');
         }
-        
-        // Add the type name to the types array for the current card
-        cardsMap.get(card_id).types.push({ type_name });
-      });
-      // Convert the map values to an array of card objects
-      const cards = Array.from(cardsMap.values());
-      
-      // Render the 'card' template with the card data
-      res.render('card', { cards, user: req.user });
+        // Save database cards in the cards array
+        cards = results;
+        // Render the cards page
+        res.render('cards', { cards: results, user: req.user });
     });
-  });
+});
 
-app.get('/register', (req, res)=>{
+app.get('/card', (req, res) => {
+    // access ids
+    const card_id = req.query.id;
+    const memberId = req.user ? req.user.id : null;
+
+    // get info for specific card
+    connection.query('SELECT card.*, type_of_card.type_name FROM pok_project.card INNER JOIN pok_project.card_type ON card.card_id = card_type.card_id INNER JOIN pok_project.type_of_card ON card_type.type_id = type_of_card.type_id WHERE card.card_id = ?', [card_id], (error, results) => {
+        // Handle any errors that occur during the database query
+        if (error) {
+            console.error('Error fetching card data:', error);
+            res.redirect('/home?msg=Error-fetching-card-data');
+        }
+
+        // Create a map to store card data, keyed by card ID
+        const cardsMap = new Map();
+
+        // Iterate over the results of the database query
+        results.forEach(card => {
+            // Rertieve card ID and type name from the query results
+            const { card_id, type_name, ...rest } = card;
+
+            // If the card ID is not already in the map, add it with an empty types array
+            if (!cardsMap.has(card_id)) {
+                cardsMap.set(card_id, { ...rest, types: [] });
+            }
+
+            // Add the type name to the types array for the current card
+            cardsMap.get(card_id).types.push({ type_name });
+        });
+        // Convert the map values to an array of card objects
+        const cards = Array.from(cardsMap.values());
+
+        // requires collections data to handle adding to specified collection
+        connection.query('SELECT * FROM user_collection WHERE member_id = ?', [memberId], (error, collections) => {
+            if (error) {
+                console.error('Error fetching collections:', error);
+                res.redirect('/home?msg=Error-fetching-collections');
+                return;
+            }
+
+            // Render the 'card' template with the card data and collections data
+            res.render('card', { cards, collections, user: req.user, card_id: req.query.id });
+        });
+    });
+});
+
+
+app.get('/register', (req, res) => {
     res.render('register', { user: req.user })
 })
 
-app.get('/login', (req, res)=>{
+app.get('/login', (req, res) => {
     res.render('login', { user: req.user })
 })
 
+// handle logging oit
 app.get('/logout', (req, res) => {
     // Clear the user session data
     req.session.destroy(err => {
         if (err) {
             console.error('Error destroying session:', err);
             // Handle error appropriately, maybe redirect to an error page
-            return res.redirect('/error');
+            return res.redirect('/home?msg=Error-logging-out');
         }
         // Redirect the user to the homepage
         res.redirect('/');
@@ -260,7 +277,7 @@ app.get('/user_collection', async (req, res) => {
             if (error) {
                 console.error('Error fetching collections:', error);
                 // Send an error response
-                res.status(500).send('Internal Server Error');
+                res.redirect('/home?msg=Error-fetching-collections');
                 return;
             }
 
@@ -270,29 +287,121 @@ app.get('/user_collection', async (req, res) => {
     } catch (error) {
         console.error('Error fetching collections:', error);
         // Send an error response
-        res.status(500).send('Internal Server Error');
+        res.redirect('/home?msg=Error-fetching-collections');
     }
 });
 
-app.get('/all_collections', async (req, res) => {
+// Route to render the message inbox page
+app.get('/message_inbox', async (req, res) => {
     try {
         // Retrieve the user's member_id from req.user
-        //const memberId = req.user.id;
+        const memberId = req.user.id;
+
+        // SQL query to select messages with sender and receiver usernames
+        const sqlQuery = `
+            SELECT messages.*, 
+                   sender.username AS sender_username,
+                   receiver.username AS receiver_username
+            FROM messages
+            INNER JOIN member AS sender ON messages.sender_id = sender.member_id
+            INNER JOIN member AS receiver ON messages.receiver_id = receiver.member_id
+            WHERE receiver.member_id = ?
+        `;
+
+        // Execute the SQL query
+        connection.query(sqlQuery, [memberId], (error, results) => {
+            if (error) {
+                console.error('Error fetching messages:', error);
+                // Send an error response
+                res.redirect('/home?msg=Error-fetching-messages');
+                return;
+            }
+
+            // Pass the retrieved messages data to the template
+            res.render('message_inbox', { messages: results, user: req.user });
+        });
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+        // Send an error response
+        res.redirect('/home?msg=Error-fetching-messages');
+    }
+});
+
+
+// Endpoint to send a message
+app.post('/send_message', async (req, res) => {
+    try {
+        // Retrieve sender's member_id from req.user
+        const senderId = req.user.id;
+
+        // Extract recipient's username and message text from the request body
+        const { recipientUsername, messageText } = req.body;
+
+        // Retrieve recipient's member_id based on the entered username
+        const recipientQuery = 'SELECT member_id FROM member WHERE username = ?';
+        connection.query(recipientQuery, [recipientUsername], (error, results) => {
+            if (error) {
+                console.error('Error retrieving recipient:', error);
+                res.redirect('/message_inbox?msg=Error-retreiving-recipient') 
+                return;
+            }
+
+            if (results.length === 0) {
+                // If no user found with the entered username, return an error
+                res.redirect('/message_inbox?msg=Recipient-not-found')
+                return;
+            }
+
+            const recipientId = results[0].member_id;
+
+            // SQL query to insert the message into the database
+            const sqlQuery = 'INSERT INTO messages (sender_id, receiver_id, message_text) VALUES (?, ?, ?)';
+            
+            // Execute the SQL query
+            connection.query(sqlQuery, [senderId, recipientId, messageText], (error, results) => {
+                if (error) {
+                    console.error('Error sending message:', error);
+                    res.status(500).send('Error sending message');
+                } else {
+                    res.redirect('/message_inbox?msg=message_sent_successfully')
+                }
+            });
+        });
+    } catch (error) {
+        console.error('Error sending message:', error);
+        res.redirect('/message_inbox?msg=Error-sending-message')
+    }
+});
+
+
+app.get('/all_collections', async (req, res) => {
+    try {
+        // Retrieve the sort parameter from the query string
+        const sortParam = req.query.sort;
+
+        // Retrieve the user's member_id from req.user
+        const memberId = req.user.id;
 
         // SQL query to select collections and corresponding member names
-        const sqlQuery = `
-        SELECT user_collection.*, member.username AS username 
-        FROM user_collection 
-        INNER JOIN member ON user_collection.member_id = member.member_id
-        
+        let sqlQuery = `
+            SELECT user_collection.*, member.username AS username 
+            FROM user_collection 
+            INNER JOIN member ON user_collection.member_id = member.member_id
         `;
+
+        // Adjust the SQL query based on the sort parameter
+        if (sortParam === 'likes_asc') {
+            sqlQuery += ' ORDER BY likes ASC';
+        } else if (sortParam === 'likes_desc') {
+            sqlQuery += ' ORDER BY likes DESC';
+        }
 
         // Execute the SQL query
         connection.query(sqlQuery, (error, results) => {
             if (error) {
                 console.error('Error fetching collections:', error);
                 // Send an error response
-                res.status(500).send('Internal Server Error');
+                res.redirect('/home?msg=Error-fetching-collections');
                 return;
             }
 
@@ -302,86 +411,264 @@ app.get('/all_collections', async (req, res) => {
     } catch (error) {
         console.error('Error fetching collections:', error);
         // Send an error response
-        res.status(500).send('Internal Server Error');
+        res.redirect('/home?msg=Error-fetching-collections');
     }
 });
 
+app.post('/update_member_info', async (req, res) => {
+    try {
+        // Retrieve the user's member_id from req.user
+        const memberId = req.user.id;
+
+        // Extract new email and password from the request body
+        const { newEmail, newPassword } = req.body;
+
+        // Update the member's email and/or password in the database
+        let updateQuery = 'UPDATE member SET';
+        const updateParams = [];
+
+        if (newEmail) {
+            updateQuery += ' email = ?';
+            updateParams.push(newEmail);
+        }
+
+        if (newPassword) {
+            if (updateParams.length > 0) {
+                updateQuery += ',';
+            }
+            updateQuery += ' password = ?';
+            updateParams.push(newPassword);
+        }
+
+        updateQuery += ' WHERE member_id = ?';
+        updateParams.push(memberId);
+
+        // Execute the SQL update query
+        connection.query(updateQuery, updateParams, (error, results) => {
+            if (error) {
+                
+                console.error('Error updating member info:', error);
+                // Redirect to an error page or display an error message
+                res.redirect('/home?msg=Error-updating-member-info');
+                return;
+            }
+
+            res.redirect('/account');
+        });
+    } catch (error) {
+        console.error('Error updating member info:', error);
+        // Redirect to an error page or display an error message
+        res.redirect('/home?msg=Error-updating-member-info');
+    }
+});
+
+
+// handle creating new collection
 app.get('/create_collection', async (req, res) => {
     try {
         // Retrieve the user's information from req.user or wherever it's stored
-        const memberId = req.user.id; // Adjust accordingly to access user information
+        const memberId = req.user.id; 
+        const collectionName = req.query.collectionName;
 
-        // Perform the insert query to add a new collection for the user
-        await connection.query('INSERT INTO user_collection (member_id) VALUES (?)', [memberId]);
+        // insert new row to user_collection
+        await connection.query('INSERT INTO user_collection (member_id, name) VALUES (?, ?)', [memberId, collectionName]);
 
-        // Redirect the user to their collection page
+        // Redirect user to collection page
         res.redirect('/user_collection');
     } catch (error) {
         console.error('Error creating collection:', error);
         // Send an error response
-        res.status(500).send('Internal Server Error');
+        res.redirect('/home?msg=Error-creating-collection');
     }
 });
-  
-app.get('/delete_collection', async (req, res) => {
-    try {
-        // Retrieve the user's information from req.user or wherever it's stored
-        const memberId = req.user.id; // Adjust accordingly to access user information
 
-        // Perform the insert query to add a new collection for the user
-        await connection.query('INSERT INTO user_collection (member_id) VALUES (?)', [memberId]);
+app.get('/delete_collection/:user_collection_id', async (req, res) => {
+    const userCollectionId = req.params.user_collection_id;
+    
+    try {
+
+        // delete the rows from user_collection_card to remove foreign key
+        await connection.query('DELETE FROM user_collection_card WHERE user_collection_id = ?', [userCollectionId]);
+
+        // Then, delete the row from the user_collection table
+        await connection.query('DELETE FROM user_collection WHERE user_collection_id = ?', [userCollectionId]);
 
         // Redirect the user to their collection page
         res.redirect('/user_collection');
     } catch (error) {
+        // Rollback the transaction if an error occurs
+        await connection.rollback();
+
         console.error('Error deleting collection:', error);
         // Send an error response
-        res.status(500).send('Internal Server Error');
+        res.redirect('/home?msg=Error-deleting-collections');
     }
 });
 
-app.get('/user_specific_collection', (req, res) =>{
-    res.render('user_specific_collection')
-})
+
+// handle specific collection
+app.get('/user_specific_collection/:user_collection_id', (req, res) => {
+    // Get user_collection_id from URL parameters
+    const user_collection_id = req.params.user_collection_id;
+
+    // Query database for collection details and associated member_id
+    const collectionQuery = `SELECT *, member_id FROM user_collection WHERE user_collection_id = ?`;
+    connection.query(collectionQuery, [user_collection_id], (error, collectionDetails) => {
+        if (error) {
+            console.error('Error fetching collection details:', error);
+            res.redirect('/home?msg=Error-fetching-collection-details');
+            return;
+        }
+
+        // Access cards associated with collection through join query
+        const cardsQuery = `
+            SELECT card.* 
+            FROM card 
+            INNER JOIN user_collection_card ON card.card_id = user_collection_card.card_id 
+            WHERE user_collection_card.user_collection_id = ?`;
+        connection.query(cardsQuery, [user_collection_id], (error, cards) => {
+            if (error) {
+                console.error('Error fetching associated cards:', error);
+                res.redirect('/home?msg=Error-fetching-associated-cards');
+                return;
+            }
+
+            // Pass collection details, user_collection_id, associated cards, and req.user to the template
+            res.render('user_specific_collection', {
+                collection: collectionDetails[0],
+                user_collection_id: user_collection_id,
+                cards: cards,
+                user: req.user, // Pass req.user which contains the user's details
+            });
+        });
+    });
+});
+
+
+
+
+
+// handle adding cards to collection
+app.post('/add_to_collection', (req, res) => {
+    // access needed ids
+    const user_collection_id = req.body.user_collection_id;
+    const card_id = req.body.card_id;
+
+    // Insert user_collection_id and card_id into user_collection_card table
+    const sqlQuery = 'INSERT INTO user_collection_card (user_collection_id, card_id) VALUES (?, ?)';
+    connection.query(sqlQuery, [user_collection_id, card_id], (error, results) => {
+        if (error) {
+            if (error.code === 'ER_DUP_ENTRY') {
+                console.error('Error adding to collection:', error);
+                res.redirect('/cards?msg=Error-card-already-in-collection');
+            } else {
+                console.error('Error adding to collection:', error);
+                res.redirect('/cards?msg=Error-adding-card');
+            }
+            return;
+        }
+        // Redirect to user_collection page after successful addition
+        res.redirect('/user_collection')
+    });
+});
+
+// handle removing card from collection
+app.post('/remove_card_from_collection', (req, res) => {
+    // access card_id and user_collection_id
+    const cardId = req.body.card_id;
+    const user_collection_id = req.body.user_collection_id;
+
+    // Delete the row from user_collection_card table where card_id and user_collection_id match
+    const deleteQuery = 'DELETE FROM user_collection_card WHERE card_id = ? AND user_collection_id = ?';
+    connection.query(deleteQuery, [cardId, user_collection_id], (error, result) => {
+        if (error) {
+            console.error('Error deleting card from collection:', error);
+            res.redirect('/home?msg=Error-deleting-card');
+            return;
+        }
+        console.log('Card removed from collection successfully.');
+
+        // Redirect to user collection
+        res.redirect('/user_specific_collection/' + user_collection_id);
+    });
+});
 
 // Route to handle sorting by number (DESC)
-app.get('/sort_by_num_asc', (req, res) => {  
+app.get('/sort_by_num_asc', (req, res) => {
     let ordered = cards.sort((a, b) => a.card_id - b.card_id);
     res.render('cards', { cards: ordered, user: req.user });
-  });
+});
 
-  // Route to handle sorting by number (DESC)
-  app.get('/sort_by_num_desc', (req, res) => {  
+// Route to handle sorting by number (DESC)
+app.get('/sort_by_num_desc', (req, res) => {
     let ordered = cards.sort((a, b) => b.card_id - a.card_id);
     res.render('cards', { cards: ordered, user: req.user });
-  });
-  
-  // Route to handle sorting Sorting Alphabetically (A-Z)
-  app.get('/alpha_az', (req, res) =>{
+});
+
+// Route to handle sorting Sorting Alphabetically (A-Z)
+app.get('/alpha_az', (req, res) => {
     let ordered = cards.sort((a, b) => {
-      // Use localeCompare for string comparison
-      return a.name.localeCompare(b.name);
+        return a.name.localeCompare(b.name);
     });
-    res.render('cards', {cards: ordered, user: req.user });
-  })
-  
-  // Route to handle sorting Sorting Alphabetically (Z-A)
-  app.get('/alpha_za', (req, res) =>{
+    res.render('cards', { cards: ordered, user: req.user });
+})
+
+// Route to handle sorting Sorting Alphabetically (Z-A)
+app.get('/alpha_za', (req, res) => {
     let ordered = cards.sort((a, b) => {
-      // Use localeCompare for string comparison
-      return b.name.localeCompare(a.name);
+        return b.name.localeCompare(a.name);
     });
-    res.render('cards', {cards: ordered, user: req.user });
-  })
+    res.render('cards', { cards: ordered, user: req.user });
+})
+
+app.get('/sort_by_likes_asc', (req, res) => {
+    let ordered = collections.sort((a, b) => a.collections.likes - b.collections.likes);
+    res.render('all_collections', { collections: ordered, user: req.user });
+});
+
+// Route to handle sorting by number (DESC)
+app.get('/sort_by_likes_desc', (req, res) => {
+    let ordered = cards.sort((a, b) => b.card_id - a.card_id);
+    res.render('cards', { cards: ordered, user: req.user });
+});
+
+// handle liking collections
+app.get('/like_collection/:collectionId', async (req, res) => {
+    try {
+        // needed ids
+        const collectionId = req.params.collectionId;
+
+        // increment collection like in database
+        const sqlQuery = 'UPDATE user_collection SET likes = likes + 1 WHERE user_collection_id = ?';
+
+        // Execute the SQL query
+        connection.query(sqlQuery, [collectionId], (error, results) => {
+            if (error) {
+                console.error('Error liking collection:', error);
+                // Send an error response
+                res.redirect('/home?msg=Error-liking-collections');
+                return;
+            }
+
+            // Redirect back to the user collection page after liking the collection
+            res.redirect('/all_collections');
+        });
+    } catch (error) {
+        console.error('Error liking collection:', error);
+        // Send an error response
+        res.redirect('/home?msg=Error-liking-collections');
+    }
+});
+
 
 // Set port number
 const port = 3000;
 
 // Start server
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-  connection.connect(function(err){
-    if(err) throw err;
-    console.log(`Database connected`);
-  })
+    console.log(`Example app listening on port ${port}`)
+    connection.connect(function (err) {
+        if (err) throw err;
+        console.log(`Database connected`);
+    })
 });
