@@ -35,6 +35,13 @@ img{
     border-bottom: 1px solid #ccc; /* Add bottom border */
 }
 
+.card-header-specific {
+    padding: 10px; /* Add padding */
+    background-color: white; /* Set background color */
+    color: black; /* Set text color */
+    border-bottom: 1px solid #ccc; /* Add bottom border */
+}
+
 .card-name {
     margin: 0; /* Remove margin */
 }
@@ -65,6 +72,16 @@ img{
     color: white; /* Set text color */
     border-top: 1px solid #ccc; /* Add top border */
     text-align: center; /* Center-align text */
+    margin-bottom: 10px;
+}
+
+.card-footer-specific {
+    padding: 10px; /* Add padding */
+    background-color: white; /* Set background color */
+    color: black; /* Set text color */
+    border-top: 1px solid #ccc; /* Add top border */
+    text-align: center; /* Center-align text */
+    margin-bottom: 10px;
 }
 
 .add-to-collection {
@@ -79,6 +96,20 @@ img{
 
 .add-to-collection:hover {
     background-color: #e9bf1b; /* Change background color on hover */
+}
+
+.cards_grid img{
+    margin: 10px auto;
+}
+
+.specific_card{
+    margin: 10px 2px;
+}
+
+/* message page */
+.send_message{
+    width: 50%;
+    margin: 10px auto;
 }
 
 /* about page */
@@ -210,8 +241,39 @@ p {
 /* home page */
 .home{
     text-align: center;
+    margin: 10px auto;
+    margin-top: 30px;
+    width: 80%;
 }
 
+.pokemon-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.pokemon-card {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.pokemon-card:hover {
+    transform: translateY(-5px);
+}
+
+.pokemon-card img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.pokemon-card h2 {
+    margin: 10px 0;
+    font-size: 18px;
+}
 
 /* Header */
 .header {
@@ -344,9 +406,20 @@ p {
     font-size: 14px; /* Set font size */
 }
 
+.create_form{
+    width: 30%;
+    margin: 10px auto;
+}
+
+.create_form input{
+    width: 50%;
+    margin: 10px auto;
+}
+
 .create-account__button {
     display: block; /* Display as block */
-    width: 100%; /* Set width */
+    width: 30%; /* Set width */
+    margin: 5px auto;
     background-color: #ffcc00; /* Set background color */
     color: #000; /* Set text color */
     border: none; /* Remove border */
@@ -440,7 +513,7 @@ p {
 /* user collections */
 .user_collection ul{
     margin: 20px auto;
-    padding: 20px;
+    padding: 40px;
 }
 
 .collection_container{
@@ -466,6 +539,68 @@ p {
 .collectionBtn:hover{
     background: grey;
 }
+
+.like_collection{
+    text-decoration: none;
+    
+}
+
+.add-to-collection{
+    font-family: 'Courier New', Courier, monospace;
+    color: black;
+    margin: 10px auto; /* Set top and bottom margin to auto and left and right margins to 10px */
+    text-align: center; /* Align text to center */
+    text-decoration: none;
+    display: block; /* Make it a block-level element */
+    width: fit-content; /* Set width to fit the content */
+    cursor: pointer;
+}
+
+.add-to-collection{
+    font-family: 'Courier New', Courier, monospace;
+    color: black;
+    margin: 10px auto; /* Set top and bottom margin to auto and left and right margins to 10px */
+    text-align: center; /* Align text to center */
+    text-decoration: none;
+    display: block; /* Make it a block-level element */
+    width: fit-content; /* Set width to fit the content */
+    cursor: pointer;
+}
+
+.like_collection:hover{
+    font-weight: bolder;
+}
+
+/* message inbox page */
+.message_inbox ul{
+    margin: 20px auto;
+    padding: 40px;
+}
+
+.message_inbox_container{
+    border: 2px solid black;
+    box-shadow: 0 0 10px grey;
+    text-decoration: none;
+    list-style-type: none;
+    padding: 20px;
+    margin: 20px auto;
+    width: 50%;
+}
+
+.message_inboxBtn{
+    font-family: 'Courier New', Courier, monospace;
+    color: black;
+    margin: 10px auto; /* Set top and bottom margin to auto and left and right margins to 10px */
+    text-align: center; /* Align text to center */
+    text-decoration: none;
+    display: block; /* Make it a block-level element */
+    width: fit-content; /* Set width to fit the content */
+}
+
+.message_inboxBtn:hover{
+    background: grey;
+}
+
 
 /* Contact form */
 .main.contact {
@@ -506,25 +641,88 @@ textarea {
     resize: vertical; /* Allow vertical resizing */
 }
 
-/* Account page */
-.member-container{
-    border: 2px solid black;
-    margin: 20px auto;
-    width: 40%;
-    padding: 20px;
+/* Style the submit button */
+.contact-form button {
+    display: block; /* Display as block element */
+    margin: 10px auto; /* Center the button horizontally with top and bottom margin */
+    padding: 0 10px; /* Add horizontal padding */
+    background-color: #ffd633; /* Set background color */
+    border-radius: 10px; /* Round corners */
+    border: solid black 2px; /* Add border */
+    font-weight: bolder; /* Set font weight */
+    font-family: 'Courier New', Courier, monospace; /* Set font family */
 }
 
-.member-container h2, li{
-    margin-top: 10px;
+.contact-form button:hover {
+    cursor: pointer; /* Set cursor to pointer */
 }
 
-.member-container li{
-    padding-left: 10px;
+.member-container {
+    border: 2px solid black; /* Add border */
+    margin: 20px auto; /* Center the container horizontally with top and bottom margin */
+    width: 40%; /* Set container width */
+    padding: 20px; /* Add padding */
 }
 
-.member-info{
-    padding: 5px 20px;
+.member-container h2,
+.member-container li {
+    margin-top: 10px; /* Add top margin */
 }
+
+.member-container li {
+    padding-left: 10px; /* Add left padding */
+}
+
+.member-info {
+    padding: 5px 20px; /* Add padding */
+}
+
+/* Style the form container */
+.account_form {
+    max-width: 400px; /* Set maximum width */
+    margin: 30px auto; /* Center the container horizontally with top and bottom margin */
+    padding: 20px; /* Add padding */
+    border: 1px solid #ccc; /* Add border */
+    border-radius: 5px; /* Round corners */
+    background-color: #f9f9f9; /* Set background color */
+}
+
+/* Style form labels */
+.account_form label {
+    display: block; /* Display as block element */
+    margin-bottom: 5px; /* Add bottom margin */
+}
+
+/* Style form inputs */
+.account_form input[type="email"],
+.account_form input[type="password"] {
+    width: 100%; /* Set width to fill container */
+    padding: 10px; /* Add padding */
+    margin-bottom: 15px; /* Add bottom margin */
+    border: 1px solid #ccc; /* Add border */
+    border-radius: 5px; /* Round corners */
+    box-sizing: border-box; /* Include padding and border in width */
+}
+
+
+/* Style the submit button */
+.account_form button[type="submit"] {
+    width: 100%; /* Set button width to 100% */
+    padding: 10px; /* Add padding */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Round corners */
+    background-color: #ffd633; /* Set background color */
+    color: black; /* Set text color */
+    cursor: pointer; /* Set cursor to pointer */
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+/* Change button background color on hover */
+.account_form button[type="submit"]:hover {
+    background-color: #eabe0e; /* Change background color on hover */
+}
+
+
 
 /* footer */ 
 footer {
