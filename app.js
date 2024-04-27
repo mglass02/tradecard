@@ -182,17 +182,51 @@ app.get('/account', (req, res) => {
 });
 
 app.get('/cards', (req, res) => {
-    // get all cards from card table and order randomly 
-    connection.query('SELECT * FROM pok_project.card ORDER BY RAND()', (error, results) => {
+    let searchTerm = req.query.search;
+    let query = 'SELECT * FROM pok_project.card';
+    let orderBy = req.query.orderBy;
+
+    // Check if there's a search term
+    if (searchTerm) {
+        // Sanitize the search term to prevent SQL injection
+        searchTerm = '%' + searchTerm.replace(/[^\w\s]/gi, '') + '%';
+        query += ' WHERE name LIKE ?';
+    }
+
+    // Check if there's an orderBy parameter
+    if (orderBy) {
+        switch (orderBy) {
+            case 'num_asc':
+                query += ' ORDER BY card_id ASC';
+                break;
+            case 'num_desc':
+                query += ' ORDER BY card_id DESC';
+                break;
+            case 'alpha_az':
+                query += ' ORDER BY name ASC';
+                break;
+            case 'alpha_za':
+                query += ' ORDER BY name DESC';
+                break;
+            default:
+                // Default to no sorting
+                break;
+        }
+    } else {
+        // If no sorting option is provided, order randomly
+        query += ' ORDER BY RAND()';
+    }
+
+    connection.query(query, [searchTerm], (error, results) => {
         if (error) {
             res.redirect('/home?msg=Error-fetching-card-data');
+        } else {
+            // Render the cards page with filtered or all cards
+            res.render('cards', { cards: results, user: req.user });
         }
-        // Save database cards in the cards array
-        cards = results;
-        // Render the cards page
-        res.render('cards', { cards: results, user: req.user });
     });
 });
+
 
 app.get('/card', (req, res) => {
     // access ids
@@ -544,10 +578,6 @@ app.get('/user_specific_collection/:user_collection_id', (req, res) => {
     });
 });
 
-
-
-
-
 // handle adding cards to collection
 app.post('/add_to_collection', (req, res) => {
     // access needed ids
@@ -592,34 +622,6 @@ app.post('/remove_card_from_collection', (req, res) => {
         res.redirect('/user_specific_collection/' + user_collection_id);
     });
 });
-
-// Route to handle sorting by number (DESC)
-app.get('/sort_by_num_asc', (req, res) => {
-    let ordered = cards.sort((a, b) => a.card_id - b.card_id);
-    res.render('cards', { cards: ordered, user: req.user });
-});
-
-// Route to handle sorting by number (DESC)
-app.get('/sort_by_num_desc', (req, res) => {
-    let ordered = cards.sort((a, b) => b.card_id - a.card_id);
-    res.render('cards', { cards: ordered, user: req.user });
-});
-
-// Route to handle sorting Sorting Alphabetically (A-Z)
-app.get('/alpha_az', (req, res) => {
-    let ordered = cards.sort((a, b) => {
-        return a.name.localeCompare(b.name);
-    });
-    res.render('cards', { cards: ordered, user: req.user });
-})
-
-// Route to handle sorting Sorting Alphabetically (Z-A)
-app.get('/alpha_za', (req, res) => {
-    let ordered = cards.sort((a, b) => {
-        return b.name.localeCompare(a.name);
-    });
-    res.render('cards', { cards: ordered, user: req.user });
-})
 
 app.get('/sort_by_likes_asc', (req, res) => {
     let ordered = collections.sort((a, b) => a.collections.likes - b.collections.likes);
