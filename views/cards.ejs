@@ -50,13 +50,20 @@
     <main class="cards__container">
         <h2>Cards</h2>
 
+        <div>
+            <form action="/cards" method="GET" class="search_card">
+                <input type="text" name="search" id="searchInput" placeholder="Search by card name...">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
         <div class="dropdown">
-            <button>Sort search</button>
+            <button>Sort options</button>
             <div class="content">
-                <a href="/sort_by_num_asc">Sort by Number (Ascending)</a>
-                <a href="/sort_by_num_desc">Sort by Number (Descending)</a>
-                <a href="/alpha_az">Sort Alphabetically (A-Z)</a>
-                <a href="/alpha_za">Sort Alphabetically (Z-A)</a>
+                <a href="/cards?orderBy=num_asc">Sort by Number (Ascending)</a>
+                <a href="/cards?orderBy=num_desc">Sort by Number (Descending)</a>
+                <a href="/cards?orderBy=alpha_az">Sort Alphabetically (A-Z)</a>
+                <a href="/cards?orderBy=alpha_za">Sort Alphabetically (Z-A)</a>
             </div>
         </div>
 
