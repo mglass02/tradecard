@@ -68,9 +68,8 @@
                         <div class="card-footer-specific">
                             <% if (collection.member_id === user.id) { %>
                                 <form action="/remove_card_from_collection" method="post">
-                                    <!-- Hidden input field for card_id -->
+                                    <!-- Hidden input fields -->
                                     <input type="hidden" name="card_id" value="<%= card.card_id %>">
-                                    <!-- Hidden input field for user_collection_id -->
                                     <input type="hidden" name="user_collection_id" value="<%= user_collection_id %>">
                                     <button type="submit" class="add-to-collection">Remove from collection</button>
                                 </form>
