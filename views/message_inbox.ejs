@@ -61,8 +61,9 @@
             <ul>
                 <% messages.forEach(message => { %>
                     <li class="collection_container">
-                        <h3>From: <%= message.sender_username %> </h3>
-                        <h3>Message: <%= message.message_text %></h3>
+                        <p><strong>From: </strong> <%= message.sender_username %> </p>
+                        <p><strong>Message: </strong> <%= message.message_text %></p>
+                        <p><strong>Received: </strong>  <%= new Date(message.sent_at).toLocaleString() %></p>
                     </li>
                 <% }); %>
             </ul>
