@@ -66,7 +66,7 @@ app.post('/register', async (req, res) => {
                 connection.query('INSERT INTO member SET ?', userData, (error, results) => {
                     if (error) {
                         console.error('Error inserting user:', error);
-                        return res.status(500).send('Internal Server Error');
+                        res.redirect('/register?msg=Unsuccessful-sign-up,-try-again...');
                     }
                     console.log('User registered successfully');
                     res.redirect('/login?msg=Successfully-signed-up');
@@ -92,23 +92,26 @@ app.post('/login', async (req, res) => {
                 res.redirect('/login?msg=Unsuccessful-login,-try-again...');
             }
             if (results.length === 0) {
-                res.redirect('/login?msg=Invalid-username,-try-again...');
+                res.redirect('/login?msg=Invalid-username-or-email,-try-again...');
+            } else {
+                const user = results[0];
+                const passwordMatch = await bcrypt.compare(password, user.password);
+                if (!passwordMatch) {
+                    res.redirect('/login?msg=Invalid-password,-try-again...');
+                } else {
+                    req.session.userId = user.member_id;
+                    req.user = { id: user.member_id };
+                    console.log("User signed in")
+                    res.render("home.ejs", { user: req.user });
+                }
             }
-            const user = results[0];
-            const passwordMatch = await bcrypt.compare(password, user.password);
-            if (!passwordMatch) {
-                res.redirect('/login?msg=Invalid-password,-try-again...');
-            }
-            req.session.userId = user.member_id;
-            req.user = { id: user.member_id };
-            console.log("User signed in")
-            res.render("home.ejs", { user: req.user });
         });
     } catch (error) {
         console.error('Error logging in:', error);
         res.redirect('/login?msg=Error-logging-in,-try-again...');
     }
 });
+
 
 // post route to handle contact form 
 app.post('/contact', (req, res) => {
@@ -122,12 +125,8 @@ app.post('/contact', (req, res) => {
     console.log(' - Message:', message);
 
     setTimeout(() => {
-        res.redirect('http://localhost:3000/home?message=Thanks+for+contacting+us');
+        res.redirect('/home?message=Thanks+for+contacting+us');
     }, 1000);
-});
-
-app.post('/user_collection', (req, res) => {
-    res.redirect('user_collection', { user: req.user });
 });
 
 app.get('/', (req, res) => {
@@ -188,7 +187,6 @@ app.get('/cards', (req, res) => {
 
     // Check if there's a search term
     if (searchTerm) {
-        // Sanitize the search term to prevent SQL injection
         searchTerm = '%' + searchTerm.replace(/[^\w\s]/gi, '') + '%';
         query += ' WHERE name LIKE ?';
     }
@@ -219,6 +217,7 @@ app.get('/cards', (req, res) => {
 
     connection.query(query, [searchTerm], (error, results) => {
         if (error) {
+            console.log('Error getting card date: ', error)
             res.redirect('/home?msg=Error-fetching-card-data');
         } else {
             // Render the cards page with filtered or all cards
@@ -286,9 +285,9 @@ app.get('/login', (req, res) => {
 // handle logging oit
 app.get('/logout', (req, res) => {
     // Clear the user session data
-    req.session.destroy(err => {
-        if (err) {
-            console.error('Error destroying session:', err);
+    req.session.destroy(error => {
+        if (error) {
+            console.error('Error destroying session:', error);
             // Handle error appropriately, maybe redirect to an error page
             return res.redirect('/home?msg=Error-logging-out');
         }
@@ -375,14 +374,14 @@ app.post('/send_message', async (req, res) => {
         const recipientQuery = 'SELECT member_id FROM member WHERE username = ?';
         connection.query(recipientQuery, [recipientUsername], (error, results) => {
             if (error) {
-                console.error('Error retrieving recipient:', error);
+                console.log('Error retrieving recipient:', error);
                 res.redirect('/message_inbox?msg=Error-retreiving-recipient') 
                 return;
             }
 
             if (results.length === 0) {
                 // If no user found with the entered username, return an error
-                res.redirect('/message_inbox?msg=Recipient-not-found')
+                res.redirect('/message_inbox?msg=username-not-found')
                 return;
             }
 
@@ -394,7 +393,7 @@ app.post('/send_message', async (req, res) => {
             // Execute the SQL query
             connection.query(sqlQuery, [senderId, recipientId, messageText], (error, results) => {
                 if (error) {
-                    console.error('Error sending message:', error);
+                    console.log('Error sending message:', error);
                     res.status(500).send('Error sending message');
                 } else {
                     res.redirect('/message_inbox?msg=message_sent_successfully')
@@ -402,7 +401,7 @@ app.post('/send_message', async (req, res) => {
             });
         });
     } catch (error) {
-        console.error('Error sending message:', error);
+        console.log('Error sending message:', error);
         res.redirect('/message_inbox?msg=Error-sending-message')
     }
 });
@@ -433,7 +432,7 @@ app.get('/all_collections', async (req, res) => {
         // Execute the SQL query
         connection.query(sqlQuery, (error, results) => {
             if (error) {
-                console.error('Error fetching collections:', error);
+                console.log('Error fetching collections:', error);
                 // Send an error response
                 res.redirect('/home?msg=Error-fetching-collections');
                 return;
@@ -443,7 +442,7 @@ app.get('/all_collections', async (req, res) => {
             res.render('all_collections', { collections: results, user: req.user });
         });
     } catch (error) {
-        console.error('Error fetching collections:', error);
+        console.log('Error fetching collections:', error);
         // Send an error response
         res.redirect('/home?msg=Error-fetching-collections');
     }
@@ -510,7 +509,7 @@ app.get('/create_collection', async (req, res) => {
         // Redirect user to collection page
         res.redirect('/user_collection');
     } catch (error) {
-        console.error('Error creating collection:', error);
+        console.log('Error creating collection:', error);
         // Send an error response
         res.redirect('/home?msg=Error-creating-collection');
     }
@@ -549,7 +548,7 @@ app.get('/user_specific_collection/:user_collection_id', (req, res) => {
     const collectionQuery = `SELECT *, member_id FROM user_collection WHERE user_collection_id = ?`;
     connection.query(collectionQuery, [user_collection_id], (error, collectionDetails) => {
         if (error) {
-            console.error('Error fetching collection details:', error);
+            console.log('Error fetching collection details:', error);
             res.redirect('/home?msg=Error-fetching-collection-details');
             return;
         }
@@ -562,7 +561,7 @@ app.get('/user_specific_collection/:user_collection_id', (req, res) => {
             WHERE user_collection_card.user_collection_id = ?`;
         connection.query(cardsQuery, [user_collection_id], (error, cards) => {
             if (error) {
-                console.error('Error fetching associated cards:', error);
+                console.log('Error fetching associated cards:', error);
                 res.redirect('/home?msg=Error-fetching-associated-cards');
                 return;
             }
@@ -589,10 +588,10 @@ app.post('/add_to_collection', (req, res) => {
     connection.query(sqlQuery, [user_collection_id, card_id], (error, results) => {
         if (error) {
             if (error.code === 'ER_DUP_ENTRY') {
-                console.error('Error adding to collection:', error);
+                console.log('Error adding to collection:', error);
                 res.redirect('/cards?msg=Error-card-already-in-collection');
             } else {
-                console.error('Error adding to collection:', error);
+                console.log('Error adding to collection:', error);
                 res.redirect('/cards?msg=Error-adding-card');
             }
             return;
@@ -612,7 +611,7 @@ app.post('/remove_card_from_collection', (req, res) => {
     const deleteQuery = 'DELETE FROM user_collection_card WHERE card_id = ? AND user_collection_id = ?';
     connection.query(deleteQuery, [cardId, user_collection_id], (error, result) => {
         if (error) {
-            console.error('Error deleting card from collection:', error);
+            console.log('Error deleting card from collection:', error);
             res.redirect('/home?msg=Error-deleting-card');
             return;
         }
@@ -621,17 +620,6 @@ app.post('/remove_card_from_collection', (req, res) => {
         // Redirect to user collection
         res.redirect('/user_specific_collection/' + user_collection_id);
     });
-});
-
-app.get('/sort_by_likes_asc', (req, res) => {
-    let ordered = collections.sort((a, b) => a.collections.likes - b.collections.likes);
-    res.render('all_collections', { collections: ordered, user: req.user });
-});
-
-// Route to handle sorting by number (DESC)
-app.get('/sort_by_likes_desc', (req, res) => {
-    let ordered = cards.sort((a, b) => b.card_id - a.card_id);
-    res.render('cards', { cards: ordered, user: req.user });
 });
 
 // handle liking collections
@@ -646,7 +634,7 @@ app.get('/like_collection/:collectionId', async (req, res) => {
         // Execute the SQL query
         connection.query(sqlQuery, [collectionId], (error, results) => {
             if (error) {
-                console.error('Error liking collection:', error);
+                console.log('Error liking collection:', error);
                 // Send an error response
                 res.redirect('/home?msg=Error-liking-collections');
                 return;
@@ -656,7 +644,7 @@ app.get('/like_collection/:collectionId', async (req, res) => {
             res.redirect('/all_collections');
         });
     } catch (error) {
-        console.error('Error liking collection:', error);
+        console.log('Error liking collection:', error);
         // Send an error response
         res.redirect('/home?msg=Error-liking-collections');
     }
